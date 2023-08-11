@@ -1,12 +1,14 @@
+from typing import Union, List
 from sentence_transformers import SentenceTransformer
 from keybert import KeyBERT
+import torch
 
 
 class VocabularyCreator:
     """
     A class to create a custom vocabulary from a list of documents using KeyBERT.
     """
-    def __init__(self, ngrams_list=None, model_name="all-MiniLM-L6-v2", **kwargs):
+    def __init__(self, ngrams_list: Union[List[str], None] = None, model_name: str ="all-MiniLM-L6-v2", **kwargs):
         """
         Initialize the vocabulary creator with the necessary parameters.
 
@@ -42,14 +44,15 @@ class VocabularyCreator:
         docs = preprocessed_df["processed_data"].astype(str).tolist()
 
         # Initialize a GPU-enabled SentenceTransformer model
-        model = SentenceTransformer(self.model_name, device="cuda")
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        model = SentenceTransformer(self.model_name, device=device)
 
         # Extract keywords using KeyBERT
         kw_model = KeyBERT(model=model)
         keywords = kw_model.extract_keywords(docs, **self.kwargs)
         
         # Flatten the list of lists and remove duplicates to create the vocabulary
-        vocabulary = list(set([word for sublist in keywords for word, score in sublist]))
+        vocabulary = list(set([word for sublist in keywords for word, _ in sublist]))
 
         # Postprocess extracted keywords by replacing single tokens with original n-grams
         if self.ngrams_list:
@@ -58,7 +61,6 @@ class VocabularyCreator:
             postprocessed_vocab = vocabulary
 
         return postprocessed_vocab
-
 
     def underscore_ngrams(self, df):
         """
@@ -80,7 +82,6 @@ class VocabularyCreator:
         preprocessed_df['processed_data'] = preprocessed_df['processed_data'].replace(ngram_replacements, regex=True)
         
         return preprocessed_df
-
 
     def restore_ngrams(self, vocabulary):
         """
