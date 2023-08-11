@@ -66,3 +66,13 @@ labels = [['product','features','performance','software','framework','touch scre
 ['technical support','technical','technician','guidance','intervention','competence','explanation','solve','query','inquiry','resolution','troubleshooting'],
 ['response time','correspondence','response','quick','answer'],
 ['business relation','factories','supplier','cooperation','partnership','oem','business','commercial','siemens']]
+
+bertopic_kwargs={
+    "seed_topic_list":labels, # Create a new BERTopic model using our predefined labels as topics
+    # "nr_topics":"auto",
+    "ctfidf_model": ClassTfidfTransformer(reduce_frequent_words=True),
+    "representation_model": [KeyBERTInspired(), MaximalMarginalRelevance(diversity=0.3)], # possible values : KeyBERTInspired() or MaximalMarginalRelevance(diversity=0.5)
+    "top_n_words":10,
+    "min_topic_size":70,
+    "calculate_probabilities": True
+}
