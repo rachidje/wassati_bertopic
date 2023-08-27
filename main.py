@@ -4,7 +4,7 @@ from utils import countries_to_update, text_data_column, words_to_filter, replac
 from preprocessing.abstract.AbstractDataLoader import SchneiderDataLoader
 from preprocessing.preprocessing import Preprocessor
 from vocabulary.vocabulary import VocabularyCreator
-from BertTopic.clustering import ClusteringMethod
+from clustering.clustering import ClusteringMethod
 from sklearn.feature_extraction.text import CountVectorizer
 import nltk
 
