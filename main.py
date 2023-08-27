@@ -36,7 +36,7 @@ bertopic_kwargs['vectorizer_model'] = CountVectorizer(
                     stop_words=stopwords, 
                     lowercase=True, 
                     ngram_range=(1, 3)
-                    )
+                )
 
 
 topics, probs, topic_model, embeddings = clustering.run_bertopic(
@@ -44,4 +44,4 @@ topics, probs, topic_model, embeddings = clustering.run_bertopic(
     **bertopic_kwargs
     )
 
-clustering.save('model')
+clustering.save('models/model')
