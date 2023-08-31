@@ -28,7 +28,7 @@ with col1:
         html_code = f.read()
     components.html(html_code, height=750)
 with col2:
-    st.subheader('''Let's see the best 12 topics''')
+    st.subheader('''Let's see the biggest 12 topics''')
     with open('data/graphs/topics_barchart_viz.html', 'r') as f:
         html_code = f.read()
     components.html(html_code, height=750)
@@ -43,7 +43,46 @@ with open('data/graphs/topic_merged_visualize_reduced_docs.html', 'r') as f:
     html_code = f.read()
 components.html(html_code, height=750)
 
-st.subheader('''And check their evolution in time''')
+st.subheader('Topic Clustering of Reviews from Schneider Electric')
+st.markdown(
+    'Finally the analyzed reviews can be clustered into few categories using several AI algorithms combined:\n'
+    '* Category 1: **Delivery Deadlines** : challenges and strategies involved in managing delivery deadlines in logistics operations. \n'
+    '* Category 2: **Quotation and Pricing Strategies**. \n'
+    '* Category 3: **Touch Panels and Touch Screens** \n'
+    '* Category 4: **Frequency Converters** : frequency converters used in industrial applications and the technical support provided by manufacturers and suppliers \n'
+    '* Category 5: **Product Evaluation** : evaluate the quality, affordability and reliability of products and services. \n'
+    '* Category 6: **Automation Components** : hardware and software components used in industrial automation systems. \n'
+    '* Category 7: Reliability and Quality in **Customer Service and Support**. \n'
+    '* Category 8: **Problem Solving and Communication** : focus on the importance of being efficient, quick and precise when solving problems \n'
+    '* Category 9: **Assistance and Guidance**. \n'
+    '* Category 10: **Power Supply Issues**. \n'
+    '* Category 11: **Technical Support**. \n'
+    '* Category 12: Some **Positive Feedbacks** \n'
+    )
+
+st.subheader('''Let's check their wordcloud''')
+# Giving user options for selecting the topic
+st.subheader('Select the topic :')
+merged_topics = ('Automation Components', 'Technical Support',
+                'Delivery Deadlines', 'Problem Solving & Comm',
+                'Power Supply Issues', 'Customer Support', 'Product Evaluation',
+                'Pricing', 'Assistance', 'Touch Screens', 'Frequency Converters',
+                'Positive feedback', 'Quick Customer Service', 'Outliers')
+option = st.selectbox(
+    'Which wordcloud do you want to see ?',merged_topics)
+
+for topic in merged_topics:
+    if option == topic:
+        col1, col2 = st.columns(2)
+        with col1:
+            st.subheader(f'{topic} Wordcloud')
+            st.image(f'data/wordclouds/topic_model_merged/{topic}.png')
+        with col2:
+            st.subheader(f'{topic} Wordcloud with lemmatized words')
+            st.image(f'data/wordclouds/topic_model_merged/{topic}_lemmatized.png')            
+
+
+st.subheader('''Now let's check their evolution in time (by months)''')
 with open('data/graphs/topic_merged_topics_over_time_months.html', 'r') as f:
     html_code = f.read()
 components.html(html_code, height=500)
