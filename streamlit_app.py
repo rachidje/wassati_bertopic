@@ -18,24 +18,6 @@ def print_graph_html(path, height=None, width=None):
     graph = open(path)
     return components.html(graph.read(), height=height, width=width)
 
-def generate_value_options(df, class_name, sublcass_name):
-    code = ""
-    for value in df[class_name].unique():
-        code += f'''if option == '{value}':
-    with open(f'data/graphs/topics_per_class/topic_model_merged/per_{shorter_names[sublcass_name]}/for_{shorter_names[class_name]}/{value}.html', 'r') as f:
-        html_code = f.read()
-    components.html(html_code, height=750)
-'''
-    return code
-
-def generate_value_options2(df, class_name, sublcass_name):
-    code = ""
-    for value in df[class_name].unique():
-        code += f'''if option == '{value}':
-    path = f'data/graphs/topics_per_class/topic_model_merged/per_{shorter_names[sublcass_name]}/for_{shorter_names[class_name]}/{value}.html'
-    print_graph_html(path, height=750)
-'''
-
 data = load_data()
 groupby_options = ['year', 'Zone', 'Clusters','Account Country', 'Market Segment']
 # Store the parameters lists in a dictionary
