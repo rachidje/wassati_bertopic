@@ -1,4 +1,5 @@
 import streamlit as st
+import numpy as np
 import pandas as pd
 import streamlit.components.v1 as components
 
@@ -13,154 +14,9 @@ def load_data():
     data = pd.read_csv('/media/cattiaux/DATA/Wassati/team_data/schneider/df_all_labelled.csv')
     return data
 
-st.write("""
-Here you will find many ways to investigate the schneider data through several forms of data visualization
-
-**Have fun :)**
-""")
-
-st.header("Clustering des data")
-
-col1, col2 = st.columns([1,1.7])
-with col1:
-    st.subheader('Many very precise topics')
-    with open('data/graphs/topic_visualize_topics.html', 'r') as f:
-        html_code = f.read()
-    components.html(html_code, height=750)
-with col2:
-    st.subheader('''Let's see the biggest 12 topics''')
-    with open('data/graphs/topics_barchart_viz.html', 'r') as f:
-        html_code = f.read()
-    components.html(html_code, height=750)
-
-st.subheader('''Let's ordered all those topics hierarchicaly''')
-with open('data/graphs/topic_hierarchy.html', 'r') as f:
-    html_code = f.read()
-components.html(html_code, height=1100)
-
-st.subheader('''Let's regroup them in relative topics''')
-with open('data/graphs/topic_merged_visualize_reduced_docs.html', 'r') as f:
-    html_code = f.read()
-components.html(html_code, height=750)
-
-st.subheader('Topic Clustering of Reviews from Schneider Electric')
-st.markdown(
-    'Finally the analyzed reviews can be clustered into few categories using several AI algorithms combined:\n'
-    '* Category 1: **Delivery Deadlines** : challenges and strategies involved in managing delivery deadlines in logistics operations. \n'
-    '* Category 2: **Quotation and Pricing Strategies**. \n'
-    '* Category 3: **Touch Panels and Touch Screens** \n'
-    '* Category 4: **Frequency Converters** : frequency converters used in industrial applications and the technical support provided by manufacturers and suppliers \n'
-    '* Category 5: **Product Evaluation** : evaluate the quality, affordability and reliability of products and services. \n'
-    '* Category 6: **Automation Components** : hardware and software components used in industrial automation systems. \n'
-    '* Category 7: Reliability and Quality in **Customer Service and Support**. \n'
-    '* Category 8: **Problem Solving and Communication** : focus on the importance of being efficient, quick and precise when solving problems \n'
-    '* Category 9: **Assistance and Guidance**. \n'
-    '* Category 10: **Power Supply Issues**. \n'
-    '* Category 11: **Technical Support**. \n'
-    '* Category 12: Some **Positive Feedbacks** \n'
-    )
-
-st.subheader('''Let's check their wordcloud''')
-# Giving user options for selecting the topic
-st.subheader('Select the topic :')
-merged_topics = ('Automation Components', 'Technical Support',
-                'Delivery Deadlines', 'Problem Solving & Comm',
-                'Power Supply Issues', 'Customer Support', 'Product Evaluation',
-                'Pricing', 'Assistance', 'Touch Screens', 'Frequency Converters',
-                'Positive feedback', 'Quick Customer Service', 'Outliers')
-option = st.selectbox(
-    'Which wordcloud do you want to see ?',merged_topics)
-
-for topic in merged_topics:
-    if option == topic:
-        col1, col2 = st.columns(2)
-        with col1:
-            st.subheader(f'{topic} Wordcloud')
-            st.image(f'data/wordclouds/topic_model_merged/{topic}.png')
-        with col2:
-            st.subheader(f'{topic} Wordcloud with lemmatized words')
-            st.image(f'data/wordclouds/topic_model_merged/{topic}_lemmatized.png')            
-
-
-st.subheader('''Now let's check their evolution in time (by months)''')
-with open('data/graphs/topic_merged_topics_over_time_months.html', 'r') as f:
-    html_code = f.read()
-components.html(html_code, height=500)
-
-st.subheader('''How the topics are related to each other ?''')
-col1, col2 = st.columns(2)
-with col1:
-    st.subheader('The global topics relations')
-    with open('data/graphs/topic_merged_heatmap.html', 'r') as f:
-        html_code = f.read()
-    components.html(html_code, height=750)
-with col2:
-    st.subheader('''The sub-topics relations''')
-    with open('data/graphs/topic_heatmap.html', 'r') as f:
-        html_code = f.read()
-    components.html(html_code, height=750)
-
-
-st.header("Topic Repartition")
-
-# Giving user options for selecting the class repartition
-st.subheader('Select the repartition information :')
-option = st.selectbox(
-    'By which class do you want to see the topic repartition?',
-    ('By Year', 'By Zone', 'By Cluster','By Country', 'By Market'))
-
-# Produces topic_per_class viz 
-if option == 'By Year':
-    with open('data/graphs/topic_merged_per_class_year.html', 'r') as f:
-        html_code = f.read()
-    components.html(html_code, height=750)
-
-if option == 'By Zone':
-    with open('data/graphs/topic_merged_per_class_zone.html', 'r') as f:
-        html_code = f.read()
-    components.html(html_code, height=750)
-
-if option == 'By Cluster':
-    with open('data/graphs/topic_merged_per_class_cluster.html', 'r') as f:
-        html_code = f.read()
-    components.html(html_code, height=750)
-
-if option == 'By Country':
-    with open('data/graphs/topic_merged_per_class_country.html', 'r') as f:
-        html_code = f.read()
-    components.html(html_code, height=750)
-
-if option == 'By Market':
-    with open('data/graphs/topic_merged_per_class_market.html', 'r') as f:
-        html_code = f.read()
-    components.html(html_code, height=750)
-
-
-st.header("Sentiment Analysis")
-
-col1, col2 = st.columns([1,2.3])
-with col1:
-    st.subheader('By Sentiment')
-    with open('data/graphs/topic_merged_per_class_sentiment.html', 'r') as f:
-        html_code = f.read()
-    components.html(html_code, height=750)
-
-with col2:
-    st.subheader('By Emotions')
-    with open('data/graphs/topic_merged_per_class_emotion.html', 'r') as f:
-        html_code = f.read()
-    components.html(html_code, height=750)
-
-
-shorter_names={
-    "single_emotion_label":"emotion",
-    "sentiment_label":"sentiment",
-    "Market Segment":"market",
-    "Account Country":"country",
-    "Zone":"zone",
-    "Clusters":"cluster",
-    "year":"year"
-}
+def print_graph_html(path, height=None, width=None):
+    graph = open(path)
+    return components.html(graph.read(), height=height, width=width)
 
 def generate_value_options(df, class_name, sublcass_name):
     code = ""
@@ -172,113 +28,183 @@ def generate_value_options(df, class_name, sublcass_name):
 '''
     return code
 
+def generate_value_options2(df, class_name, sublcass_name):
+    code = ""
+    for value in df[class_name].unique():
+        code += f'''if option == '{value}':
+    path = f'data/graphs/topics_per_class/topic_model_merged/per_{shorter_names[sublcass_name]}/for_{shorter_names[class_name]}/{value}.html'
+    print_graph_html(path, height=750)
+'''
 
-st.subheader("Repartition of the subclass within an emotion")
+data = load_data()
+groupby_options = ['year', 'Zone', 'Clusters','Account Country', 'Market Segment']
+# Store the parameters lists in a dictionary
+my_data = {option: (np.insert(data[option].unique().astype('object'), 0, "all time") if option == 'year' else data[option].unique()) for option in groupby_options}
+# Add the merged_topics and emotions lists to the my_data dictionary
+my_data['merged_topics'] = data['label'].unique()
+my_data['emotions'] = data['single_emotion_label'].unique()
 
-emotions = ('disappointment','admiration','neutral','approval','disapproval', 
-            'gratitude','caring','realization','desire','annoyance', 
-            'confusion','surprise','joy','optimism','nervousness', 
-            'love','fear','curiosity','excitement','amusement','relief',
-            'sadness','remorse','disgust','embarrassment','anger')
-option = st.selectbox(
-    'Which emotion do you want to see the repartition ?',emotions)
+shorter_names={
+    "single_emotion_label":"emotion",
+    "sentiment_label":"sentiment",
+    "Market Segment":"market",
+    "Account Country":"country",
+    "Zone":"zone",
+    "Clusters":"cluster",
+    "year":"year"
+}
 
-groups = ('Zone','Clusters','Account Country','Market Segment','year')
-group_option = st.selectbox(
-        'By which Market value do you want to see the emotion topic repartition?',groups)
+st.write("""
+Here you will find many ways to investigate the schneider data through several forms of data visualization
 
-emotion_option_code = generate_value_options(load_data(),"single_emotion_label",group_option)
-exec(emotion_option_code)
+**Have fun :)**
+""")
+
+st.header("Clustering des data")
+st.write("""
+Clustering is a technique used to group similar data points together. In the context of Natural Language Processing (NLP), clustering can be used to identify patterns and relationships in large amounts of text data. This can be a challenging task, as language is complex and often ambiguous, and there are many different ways that text data can be represented and analyzed.
+
+Over the years, NLP has evolved significantly, with the rise of advanced machine learning algorithms and the availability of large amounts of data. These developments have enabled us to develop more sophisticated methods for clustering text data, using some of the most complex AI algorithms available. These state-of-the-art techniques can help us better understand the underlying structure of language and extract valuable insights from text data.""")
+   
+col1, col2 = st.columns([1,1.7])
+with col1:
+    st.markdown("<h3 style='text-align: center; color: black;'>Many very precise topics</h3>", unsafe_allow_html=True)
+    print_graph_html('data/graphs/topic_visualize_topics.html', height=750)
+with col2:
+    st.markdown("<h3 style='text-align: center; color: black;'>The biggest 12 topics keywords</h3>", unsafe_allow_html=True)
+    print_graph_html('data/graphs/topics_barchart_viz.html', height=750)
+
+
+st.subheader('''Topics hierarchy''')
+st.write("""Let's ordered all those topics hierarchicaly\n\n""")
+print_graph_html('data/graphs/topic_hierarchy.html', height=1050)
+
+
+st.subheader('Aggregated Topics')
+st.write(
+    'Finally the analyzed reviews can be clustered into few categories using several AI algorithms combined:\n'
+    '* Topic 1: **Delivery Deadlines** : challenges and strategies involved in managing delivery deadlines in logistics operations. \n'
+    '* Topic 2: **Quotation and Pricing Strategies**. \n'
+    '* Topic 3: **Touch Panels and Touch Screens** \n'
+    '* Topic 4: **Frequency Converters** : frequency converters used in industrial applications and the technical support provided by manufacturers and suppliers \n'
+    '* Topic 5: **Product Evaluation** : evaluate the quality, affordability and reliability of products and services. \n'
+    '* Topic 6: **Automation Components** : hardware and software components used in industrial automation systems. \n'
+    '* Topic 7: Reliability and Quality in **Customer Service and Support**. \n'
+    '* Topic 8: **Problem Solving and Communication** : focus on the importance of being efficient, quick and precise when solving problems \n'
+    '* Topic 9: **Assistance and Guidance**. \n'
+    '* Topic 10: **Power Supply Issues**. \n'
+    '* Topic 11: **Technical Support**. \n'
+    '* Topic 12: Some **Positive Feedbacks** \n'
+    )
+
+st.subheader('''Vizualize documents per aggregated topic''')
+st.write("""Let's regroup the many subtopics into the aggregated topics\n\n""")
+print_graph_html('data/graphs/topic_merged_visualize_reduced_docs.html', height=750)
+
+
+st.subheader('''Wordcloud''')
+st.write("""Let's see how the aggregated topics are described through their corresponding wordcloud images\n\n""")
+# Giving user options for selecting the topic
+topic_option = st.selectbox('Select topic : which wordcloud do you want to see ?', my_data["merged_topics"])
+# Display two wordcloud images side by side.
+col1, col2 = st.columns(2)
+with col1:
+    st.markdown(f"<h4 style='text-align: center; color: grey;'>topic_option Wordcloud</h4>", unsafe_allow_html=True)
+    st.image(f'data/wordclouds/topic_model_merged/{topic_option}.png')
+with col2:
+    st.markdown(f"<h4 style='text-align: center; color: grey;'>topic_option Wordcloud with lemmatized words</h4>", unsafe_allow_html=True)
+    st.image(f'data/wordclouds/topic_model_merged/{topic_option}_lemmatized.png') 
+
+
+st.subheader('''Topic Evolution''')
+st.write("""Let's check the topics evolution in time (by months)\n\n""")
+print_graph_html('data/graphs/topic_merged_topics_over_time_months.html', height=500)
+
+
+st.subheader('''Heatmaps Graphics''')
+st.write("""Let's see how the topics are related to each other\n\n""")
+# Display two heatmap images side by side.
+col1, col2 = st.columns(2)
+with col1:
+    st.markdown("<h4 style='text-align: center; color: grey;'>The global topics relations</h4>", unsafe_allow_html=True)
+    print_graph_html('data/graphs/topic_merged_heatmap.html', height=750)
+with col2:
+    st.markdown("<h4 style='text-align: center; color: grey;'>The sub-topics relations</h4>", unsafe_allow_html=True)
+    print_graph_html('data/graphs/topic_heatmap.html', height=750)
+
+
+st.subheader("Topic Repartition")
+st.write("""Let's study the repartition of the topics regarding some other groups information\n\n""")
+# Giving user options for selecting the class repartition
+groupby_option = st.selectbox('Select group : by which class do you want to see the topic repartition?',groupby_options)
+# Produces topic_per_class barchart
+print_graph_html(f'data/graphs/topics_per_class/topic_model_merged/{shorter_names[groupby_option]}.html', height=750)
+
+
+st.header("Sentiment Analysis")
+st.write("""
+         Sentiment analysis is a technique used to determine the emotional tone behind a piece of text. It can be used to identify whether the text expresses a positive, neutral, or negative sentiment. Emotion analysis goes deeper and can identify specific emotions such as approval, disappointment, anger, and more. This can be useful for understanding how people feel about a particular topic or product. Sentiment analysis is a complex field that involves natural language processing and machine learning techniques, but the results can provide valuable insights into the emotions expressed in text.\n\n
+         """)
+
+
+st.subheader('Sentiments and Emotions Repartition By Topic')
+st.write("""Let's study the global repartition by topic of the sentiments and emotions.\n\n""")
+col1, col2 = st.columns([1,2.3])
+with col1:
+    st.markdown("<h4 style='text-align: center; color: grey;'>By Sentiment</h4>", unsafe_allow_html=True)
+    print_graph_html('data/graphs/topics_per_class/topic_model_merged/sentiment.html', height=750)
+with col2:
+    st.markdown("<h4 style='text-align: center; color: grey;'>By Emotion</h4>", unsafe_allow_html=True)
+    print_graph_html('data/graphs/topics_per_class/topic_model_merged/emotion.html', height=750)
+
+
+st.subheader('Single emotion repartition')
+st.write("""Here we study the repartition of each emotion by a certain group.\n\n""")
+# Giving user options for selecting the emotion
+emotion = st.selectbox('Select the emotion you want to study',my_data["emotions"])
+groupby_option = st.selectbox('Select the group you want to study the emotion on',groupby_options)
+
+# We define 3 columns in order to put the image in the second and then have it centered
+if groupby_option=='Zone' or groupby_option=='Clusters' or groupby_option=='Account Country' or groupby_option=='Market Segment' :
+    time_period = st.selectbox('Select the period of time you want to study',my_data["year"])
+    col1, col2, col3 = st.columns([1,3,1])
+    # case where "all time" is chosen, the files weren't saved with the "all time" suffix -> Could be updated in the image generation part
+    if time_period == "all time":
+        with col2:
+            st.image(f'data/graphs/emotions/{emotion}_by_{groupby_option}.png')
+    # any other case where time_period isn't "all time"
+    else:
+        with col2:
+            st.image(f'data/graphs/emotions/{emotion}_by_{groupby_option}_{time_period}.png')
+
+elif groupby_option=="year":
+    col1, col2, col3 = st.columns([1,3,1])
+    with col2:
+        st.image(f'data/graphs/emotions/{emotion}_by_{groupby_option}.png') 
 
 
 
-
+texte = """Go deeper in the evolution of each emotion. 
+For that you will find below two barcharts.\n
+One represents the repartition of a specified emotion within a group of your choice (like geographical filters, market segment filter or the repartition in time.\n
+The other chart is more precise, more specific. It still represents the repartition of a specified emotion within a group of your choice, adding one more information : the topics. You can through it study the repartition of an emotion per topic and per a group of your choice\n\n"""
+st.markdown(f"<h3 style='text-align: left; color: black;'>{texte}</h3>", unsafe_allow_html=True)
 
 st.subheader("Repartition of the emotions within a subclass")
-
-option = st.selectbox(
-    'By which class do you want to see the emotion topic repartition?',
-    ('By Year', 'By Zone', 'By Cluster','By Country', 'By Market'))
-
-markets=('Machinery', 'Industrial Manufacturing and Commercial', 'Water',
-       'MMM', 'Energies and Chemicals', 'Food & Beverage', 'Healthcare',
-       'Public Access, Education, Research, Finance Buildings',
-       'IT Equipment and Professional Services',
-       'Automotive & E-Mobility', 'Marine & Shore Power', 'Power & Grid',
-       'Transportation', 'Unknown', 'Residential', 'Semiconductor',
-       'Real Estate', 'LifeSciences', 'Cloud & Service providers',
-       'Wholesale & Retail Trade', 'Household & Personal Care',
-       'Education & Research', 'Hotels', 'Finance')
-if option == 'By Market':
-    option = st.selectbox(
-        'By which Market Segment do you want to see the emotion topic repartition?',markets)
-
-market_option_code = generate_value_options(load_data(),"Market Segment","single_emotion_label")
-exec(market_option_code)
-
-zones=('Italy', 'Nordic & Baltics', 'DACH', 'Iberia', 'East Asia Japan',
-       'Greater India', 'US', 'France', 'Middle East and Africa', 'CEEI',
-       'China & HK', 'South America', 'Pacific', 'BeNe', 'UK and Ireland',
-       'Canada', 'Mexico & Central America')
-if option == 'By Zone':
-    option = st.selectbox(
-        'By which Zone do you want to see the emotion topic repartition?',zones)
-
-zone_option_code = generate_value_options(load_data(),"Zone","single_emotion_label")
-exec(zone_option_code)
-
-clusters=('Italy', 'Sweden', 'Germany', 'Spain', 'North East Asia',
-       'Switzerland', 'India', 'USA', 'France', 'South East Asia',
-       'Portugal', 'Finland & Baltics',
-       'Turkey Central Asia and Pakistan', 'Denmark',
-       'Middle Eastern Europe', 'China',
-       'Argentina, Uruguay and Paraguay', 'Norway', 'Australia', 'Brazil',
-       'Chile', 'Belgium', 'United Kingdom', 'Canada', 'Southeast Europe',
-       'Austria', 'Netherlands', 'New Zealand', 'Israel',
-       'Andean Cluster', 'Anglophone Africa', 'Mexico', 'Ireland',
-       'Saudi Arabia & Yemen', 'North East Africa and Levant',
-       'Francophone Africa', 'Gulf', 'Liechtenstein', 'Hong Kong & Macao')
-if option == 'By Cluster':
-    option = st.selectbox(
-        'By which Cluster do you want to see the emotion topic repartition?',clusters)
-
-cluster_option_code = generate_value_options(load_data(),"Clusters","single_emotion_label")
-exec(cluster_option_code)
-
-countries=('Italy', 'Sweden', 'Germany', 'Spain', 'Japan', 'Switzerland',
-        'India', 'USA', 'France', 'Thailand', 'Vietnam', 'Portugal',
-        'Finland', 'Turkey', 'Denmark', 'Poland', 'Korea, Republic of',
-        'Czech Republic', 'China', 'Argentina', 'Norway', 'Indonesia',
-        'Australia', 'Brazil', 'Chile', 'Singapore', 'Belgium',
-        'United Kingdom', 'Slovakia', 'Canada', 'Romania', 'Austria',
-        'Taiwan', 'Pakistan', 'Netherlands', 'New Zealand', 'Israel',
-        'Colombia', 'Kazakhstan', 'Bulgaria', 'South Africa', 'Mexico',
-        'Croatia', 'Ireland', 'Saudi Arabia', 'Greece', 'Malaysia',
-        'Lithuania', 'Serbia', 'Egypt', 'Morocco', 'Hungary', 'Peru',
-        'Estonia', 'United Arab Emirates', 'Lebanon', 'Dominican Republic',
-        'Latvia', 'Jordan', 'Liechtenstein', 'Slovenia', 'San Marino',
-        'Paraguay', 'Hong Kong', 'Kuwait', 'Qatar', 'Oman')
-if option == 'By Country':
-    option = st.selectbox(
-        'By which Country do you want to see the emotion topic repartition?',countries)
-
-country_option_code = generate_value_options(load_data(),"Account Country","single_emotion_label")
-exec(country_option_code)
-
-years=("2023", "2022", "2021", "2020", "2019", "2018")
-if option == 'By Year':
-    option = st.selectbox(
-        'By which year do you want to see the emotion topic repartition?',years)
-
-year_option_code = generate_value_options(load_data(),"year","single_emotion_label")
-exec(year_option_code)
+st.write("""Here we can track the repartition of a specific emotion according to a specified data group.\n\n""")
+emotion = st.selectbox('Which emotion do you want to see the repartition ?',my_data["emotions"])
+groupby_option = st.selectbox('With which class do you want to see the topic repartition of the emotion chosen?',groupby_options)
+print_graph_html(f'data/graphs/topics_per_class/topic_model_merged/per_{shorter_names[groupby_option]}/for_emotion/{emotion}.html', height=750)
 
 
+st.subheader("Emotion Repartition according to a subclass AND the topics")
+st.write("""Let's check the repartition of a specific emotion according to a specified data group AND according to the topics.\n\n""")
+groupby_option = st.selectbox('By which class do you want to see the emotion topic repartition?',groupby_options)
+# Propose to the user to choose one of the values that exist in his precedent chosen class
+options = [x for x in my_data[groupby_option] if groupby_option != "year" or x != "all time"]
+value = st.selectbox(f'By which {shorter_names[groupby_option]} do you want to see the emotion topic repartition?',options)
 
-
-
-
-
+print_graph_html(f'data/graphs/topics_per_class/topic_model_merged/per_emotion/for_{shorter_names[groupby_option]}/{value}.html', height=750)
 
 
 # Custom footer workaround to overide default streamlit footer
