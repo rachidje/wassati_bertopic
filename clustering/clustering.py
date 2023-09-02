@@ -1,3 +1,4 @@
+from pandas import DataFrame
 from sentence_transformers import SentenceTransformer
 from bertopic import BERTopic
 import pickle
@@ -5,17 +6,29 @@ import pickle
 import torch
 
 class ClusteringMethod:
+    """
 
-    def run_bertopic(self, df, model_name="all-MiniLM-L6-v2", **bertopic_kwargs):
+
+    """
+
+    def run_bertopic(self, df : DataFrame, model_name : str ="all-MiniLM-L6-v2", **bertopic_kwargs):
         """
         Run BERTopic on a DataFrame.
 
         This function takes a DataFrame, an optional model name, and additional keyword arguments as input. It extracts the "processed_data" column from the DataFrame and converts it to a list of strings. Then, it extracts embeddings for the input documents using a SentenceTransformer model. Finally, it runs BERTopic on the input documents and embeddings and returns the resulting topics and probabilities.
 
-        :param df: A DataFrame containing the input documents in the "processed_data" column.
-        :param model_name: An optional string specifying the name of the SentenceTransformer model to use. Defaults to "all-MiniLM-L6-v2".
-        :param bertopic_kwargs: Additional keyword arguments to be passed to the BERTopic constructor.
-        :return: A tuple containing four elements: a list of topics assigned to each input document, a matrix of topic probabilities for each input document, the BERTopic model used and the embeddings.
+        Parameters
+        ----------
+            df: DataFrame
+                A DataFrame containing the input documents in the "processed_data" column.
+            model_name: str
+                An optional string specifying the name of the SentenceTransformer model to use. Defaults to "all-MiniLM-L6-v2".
+            bertopic_kwargs: dict
+                Additional keyword arguments to be passed to the BERTopic constructor.
+
+        Returns
+        -------
+            A tuple containing four elements: a list of topics assigned to each input document, a matrix of topic probabilities for each input document, the BERTopic model used and the embeddings.
         """
 
         # Extract documents from DataFrame
@@ -40,7 +53,14 @@ class ClusteringMethod:
 
         This function takes a filename as input and saves the BERTopic model and its associated data (embeddings, topics, and probabilities) to the specified file using the pickle module.
 
-        :param filename: The name of the file to save the data to.
+        Parameters
+        ----------
+            filename: str
+                The name of the file to save the data to.
+
+        Returns
+        -------
+            None
         """
         
         with open(filename, 'wb') as f:
@@ -52,7 +72,13 @@ class ClusteringMethod:
 
         This function takes a filename as input and loads the BERTopic model and its associated data (embeddings, topics, and probabilities) from the specified file using the pickle module.
 
-        :param filename: The name of the file to load the data from.
+        Parameters
+        ----------
+            filename: str
+                The name of the file to load the data from.
+        Returns
+        -------
+            None
         """
 
         with open(filename, 'rb') as f:
