@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import streamlit.components.v1 as components
+from utils.load_streamlit_data import data
 
 # p = open("data/graphs/topic_merged_per_class_sentiment.html")
 # components.html(p.read())
@@ -9,16 +10,11 @@ st.set_page_config(layout="wide")
 
 st.title("Schneider Electric Verbatim Analysis")
 
-@st.cache_data
-def load_data():
-    data = pd.read_csv('data/df_all_labelled.csv')
-    return data
 
 def print_graph_html(path, height=None, width=None):
     graph = open(path)
     return components.html(graph.read(), height=height, width=width)
 
-data = load_data()
 groupby_options = ['year', 'Zone', 'Clusters','Account Country', 'Market Segment']
 # Store the parameters lists in a dictionary
 my_data = {option: (np.insert(data[option].unique().astype('object'), 0, "all time") if option == 'year' else data[option].unique()) for option in groupby_options}
