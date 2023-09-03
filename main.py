@@ -1,7 +1,7 @@
 from pandas import read_csv
 
-from utils import countries_to_update, text_data_column, words_to_filter, replacements, ngrams_list, keybert_kwargs, bertopic_kwargs, more_stopwords, labels
-from preprocessing.abstract.AbstractDataLoader import SchneiderDataLoader
+from utils.schneider import countries_to_update, text_data_column, words_to_filter, replacements, ngrams_list, keybert_kwargs, bertopic_kwargs, more_stopwords
+from preprocessing.dataLoaders.schneider_data_loader import SchneiderDataLoader
 from preprocessing.preprocessing import Preprocessor
 from vocabulary.vocabulary import VocabularyCreator
 from clustering.clustering import ClusteringMethod
