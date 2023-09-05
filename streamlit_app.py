@@ -8,7 +8,7 @@ from utils.load_streamlit_data import data
 # components.html(p.read())
 st.set_page_config(layout="wide")
 
-st.title("Schneider Electric Verbatim Analysis")
+st.title("Example of Verbatim Analysis")
 
 
 def print_graph_html(path, height=None, width=None):
@@ -33,7 +33,7 @@ shorter_names={
 }
 
 st.write("""
-Here you will find many ways to investigate the schneider data through several forms of data visualization
+Here you will find many ways to investigate the data through several forms of data visualization
 
 **Have fun :)**
 """)
