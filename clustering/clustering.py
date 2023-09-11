@@ -6,12 +6,11 @@ import pickle
 import torch
 
 class ClusteringMethod:
-    """
+    
+    def __init__(self, model_name) -> None:
+        self.model_name = model_name
 
-
-    """
-
-    def run_bertopic(self, df : DataFrame, model_name : str ="all-MiniLM-L6-v2", **bertopic_kwargs):
+    def run_bertopic(self, df : DataFrame, **bertopic_kwargs):
         """
         Run BERTopic on a DataFrame.
 
@@ -36,7 +35,7 @@ class ClusteringMethod:
 
         # Extract embeddings
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        sentence_model = SentenceTransformer(model_name, device= device)
+        sentence_model = SentenceTransformer(self.model_name, device= device)
         self.embeddings = sentence_model.encode(docs, show_progress_bar=True)
 
         # Run BERTopic
