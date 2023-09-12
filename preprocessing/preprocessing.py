@@ -153,3 +153,63 @@ class Preprocessor:
             series = series.str.replace(old_word, new_word, regex=False)
         df['processed_data'] = series
         return df
+
+    def convert_dict(input_dict, conversion_type='keys_to_values'):
+        """
+        This function converts between a key-to-value dictionary and a value-to-keys dictionary.
+
+        Args:
+            input_dict (dict): The input dictionary. If conversion_type is 'keys_to_values', this should be a dictionary where 
+                            the keys are the original keys and the values are the corresponding values. If conversion_type is 
+                            'values_to_keys', this should be a dictionary where the keys are the original values and the values 
+                            are lists of keys for each value.
+            conversion_type (str): The type of conversion to perform. Can be either 'keys_to_values' or 'values_to_keys'.
+
+        Returns:
+            dict: The converted dictionary. If conversion_type is 'keys_to_values', this will be a dictionary where the keys 
+                are the original values and the values are lists of keys for each value. If conversion_type is 'values_to_keys', 
+                this will be a dictionary where the keys are the original keys and the values are the corresponding values.
+        """
+        if conversion_type == 'keys_to_values':
+            output_dict = {}
+            for key, value in input_dict.items():
+                if value not in output_dict:
+                    output_dict[value] = []
+                output_dict[value].append(key)
+        elif conversion_type == 'values_to_keys':
+            output_dict = {key: value for value, keys in input_dict.items() for key in keys}
+        else:
+            raise ValueError("Invalid conversion_type. Must be either 'keys_to_values' or 'values_to_keys'.")
+        
+        return output_dict
+
+    def add_grouping_column(df, key_column, group_dict, group_column_name):
+        """
+        This function adds a new column to a DataFrame with the group name of each key.
+
+        Args:
+            df (pd.DataFrame): The original DataFrame.
+            key_column (str): The name of the column in df that contains the keys.
+            group_dict (dict): A dictionary where the keys are the original keys and the values are the corresponding group names.
+            group_column_name (str): The name of the new column to be added to df for the groups.
+
+        Returns:
+            pd.DataFrame: The original DataFrame with an added column for the groups.
+        """
+        df[group_column_name] = df[key_column].map(group_dict)
+        return df
+    
+    def filter_docs(df, filter_column, filter_value):
+        """
+        Filter a dataframe based on a specified column and value.
+
+        Parameters:
+        df (pandas.DataFrame): The dataframe to filter.
+        filter_column (str): The name of the column to filter by.
+        filter_value (str): The value to filter by in the specified column.
+
+        Returns:
+        tuple: A tuple containing the filtered dataframe and a boolean mask indicating which rows match the specified filter.
+        """
+        filter_mask = df[filter_column] == filter_value
+        return df[filter_mask], filter_mask
