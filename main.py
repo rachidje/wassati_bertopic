@@ -31,6 +31,7 @@ vocabulary_creator = VocabularyCreator(
     **keybert_kwargs
 )
 vocabulary_list = vocabulary_creator.keybert_vocabulary(df_preprocessed)
+print(len(vocabulary_list))
 
 # On lance BERTopic avec ou sans vocabulary
 clustering = ClusteringMethod(model_name)
@@ -47,4 +48,4 @@ topics, probs, topic_model, embeddings = clustering.run_bertopic(
     **bertopic_kwargs
     )
 
-clustering.save('models/model')
+# clustering.save('models/model')
