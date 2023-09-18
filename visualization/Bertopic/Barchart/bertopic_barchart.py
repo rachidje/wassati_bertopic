@@ -307,7 +307,7 @@ class BertopicBarchart:
         Returns:
             plotly.graph_objs.Figure: The resulting chart representing the topics per class.
         """
-        topics_per_class = self.create_topics_per_class_df(df, bertopic_model, classes_column, filter=filter, subclass_name=filter_group, subclass_value=filter_value, sortedBy=sortedBy, ascending=ascending)
+        topics_per_class = self.create_topics_per_class_df(df, bertopic_model, classes_column, filter=filter, filter_name=filter_group, filter_value=filter_value, sortedBy=sortedBy, ascending=ascending)
         fig = self.visualize_topics_per_class_options(bertopic_model, topics_per_class, orient=orient, **kwargs)
 
         return fig 
