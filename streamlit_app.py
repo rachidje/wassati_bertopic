@@ -18,10 +18,21 @@ def print_graph_html(path, height=None, width=None):
     graph = open(path)
     return components.html(graph.read(), height=height, width=width)
 
+def data_representation_buttons(session_var, button_col_freq, button_col_pct):
+    # Initialize session state for the selection
+    if session_var not in st.session_state:
+        st.session_state[session_var] = 'By Frequency'
+    # Create buttons and handle selection
+    if button_col_freq.button('By Frequency'):
+        st.session_state[session_var] = 'By Frequency'
+    if button_col_pct.button('By Percentage'):
+        st.session_state[session_var] = 'By Percentage'
+
+
 data = load_data()
 groupby_options = ['year', 'Zone', 'Clusters','Account Country', 'Market Segment']
 # Store the parameters lists in a dictionary
-my_data = {option: (np.insert(data[option].unique().astype('object'), 0, "all time") if option == 'year' else data[option].unique()) for option in groupby_options}
+my_data = {option: (np.insert(data[option].unique().astype('object'), 0, "all_time") if option == 'year' else data[option].unique()) for option in groupby_options}
 # Add the merged_topics and emotions lists to the my_data dictionary
 my_data['merged_topics'] = data['label'].unique()
 my_data['emotions'] = data['single_emotion_label'].unique()
@@ -42,6 +53,7 @@ Here you will find many ways to investigate the schneider data through several f
 **Have fun :)**
 """)
 
+
 st.header("Clustering des data")
 st.write("""
 Clustering is a technique used to group similar data points together. In the context of Natural Language Processing (NLP), clustering can be used to identify patterns and relationships in large amounts of text data. This can be a challenging task, as language is complex and often ambiguous, and there are many different ways that text data can be represented and analyzed.
@@ -51,15 +63,15 @@ Over the years, NLP has evolved significantly, with the rise of advanced machine
 col1, col2 = st.columns([1,1.7])
 with col1:
     st.markdown("<h3 style='text-align: center; color: black;'>Many very precise topics</h3>", unsafe_allow_html=True)
-    print_graph_html('data/graphs/topic_visualize_topics.html', height=750)
+    print_graph_html('data/graphs/Clustering/global/topic_visualize_topics.html', height=750)
 with col2:
     st.markdown("<h3 style='text-align: center; color: black;'>The biggest 12 topics keywords</h3>", unsafe_allow_html=True)
-    print_graph_html('data/graphs/topics_barchart_viz.html', height=750)
+    print_graph_html('data/graphs/Clustering/global/top_12_topics_barchart_viz.html', height=750)
 
 
 st.subheader('''Topics hierarchy''')
 st.write("""Let's ordered all those topics hierarchicaly\n\n""")
-print_graph_html('data/graphs/topic_hierarchy.html', height=1050)
+print_graph_html('data/graphs/Clustering/hierarchy/topics_hierarchy.html', height=1050)
 
 
 st.subheader('Aggregated Topics')
@@ -81,7 +93,7 @@ st.write(
 
 st.subheader('''Vizualize documents per aggregated topic''')
 st.write("""Let's regroup the many subtopics into the aggregated topics\n\n""")
-print_graph_html('data/graphs/topic_merged_visualize_reduced_docs.html', height=750)
+print_graph_html('data/graphs/Clustering/documents_viz/topic_merged_visualize_reduced_docs.html', height=750)
 
 
 st.subheader('''Wordcloud''')
@@ -100,7 +112,7 @@ with col2:
 
 st.subheader('''Topic Evolution''')
 st.write("""Let's check the topics evolution in time (by months)\n\n""")
-print_graph_html('data/graphs/topic_merged_topics_over_time_months.html', height=500)
+print_graph_html('data/graphs/Clustering/topic_in_time/topic_merged_time_by_months.html', height=500)
 
 
 st.subheader('''Heatmaps Graphics''')
@@ -109,18 +121,25 @@ st.write("""Let's see how the topics are related to each other\n\n""")
 col1, col2 = st.columns(2)
 with col1:
     st.markdown("<h4 style='text-align: center; color: grey;'>The global topics relations</h4>", unsafe_allow_html=True)
-    print_graph_html('data/graphs/topic_merged_heatmap.html', height=750)
+    print_graph_html('data/graphs/Clustering/heatmap/topic_merged_heatmap.html', height=750)
 with col2:
     st.markdown("<h4 style='text-align: center; color: grey;'>The sub-topics relations</h4>", unsafe_allow_html=True)
-    print_graph_html('data/graphs/topic_heatmap.html', height=750)
+    print_graph_html('data/graphs/Clustering/heatmap/topic_heatmap.html', height=750)
 
 
 st.subheader("Topic Repartition")
 st.write("""Let's study the repartition of the topics regarding some other groups information\n\n""")
 # Giving user options for selecting the class repartition
 groupby_option = st.selectbox('Select group : by which class do you want to see the topic repartition?',groupby_options)
+
+# Add buttons to choose for frequency or percentage for the representation of the data 
+_, col2, col3, _ = st.columns([3,1,1,7])
+data_representation_buttons("topic_repartition", col2, col3)
 # Produces topic_per_class barchart
-print_graph_html(f'data/graphs/topics_per_class/topic_model_merged/{shorter_names[groupby_option]}.html', height=750)
+if st.session_state["topic_repartition"]== "By Frequency":
+    print_graph_html(f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}.html', height=750)
+elif st.session_state["topic_repartition"]== "By Percentage":
+    print_graph_html(f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}_pct.html', height=750)
 
 
 st.header("Sentiment Analysis")
@@ -134,10 +153,10 @@ st.write("""Let's study the global repartition by topic of the sentiments and em
 col1, col2 = st.columns([1,2.3])
 with col1:
     st.markdown("<h4 style='text-align: center; color: grey;'>By Sentiment</h4>", unsafe_allow_html=True)
-    print_graph_html('data/graphs/topics_per_class/topic_model_merged/sentiment.html', height=750)
+    print_graph_html('data/graphs/Sentiment_Analysis/by_sentiment/repartition_per_topic/global/model_merged_per_sentiment.html', height=750)
 with col2:
     st.markdown("<h4 style='text-align: center; color: grey;'>By Emotion</h4>", unsafe_allow_html=True)
-    print_graph_html('data/graphs/topics_per_class/topic_model_merged/emotion.html', height=750)
+    print_graph_html('data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/global/model_merged_per_emotion.html', height=750)
 
 
 st.subheader('Single emotion repartition')
@@ -150,19 +169,21 @@ groupby_option = st.selectbox('Select the group you want to study the emotion on
 if groupby_option=='Zone' or groupby_option=='Clusters' or groupby_option=='Account Country' or groupby_option=='Market Segment' :
     time_period = st.selectbox('Select the period of time you want to study',my_data["year"])
     col1, col2, col3 = st.columns([1,3,1])
-    # case where "all time" is chosen, the files weren't saved with the "all time" suffix -> Could be updated in the image generation part
-    if time_period == "all time":
-        with col2:
-            st.image(f'data/graphs/emotions/{emotion}_by_{groupby_option}.png')
-    # any other case where time_period isn't "all time"
-    else:
-        with col2:
-            st.image(f'data/graphs/emotions/{emotion}_by_{groupby_option}_{time_period}.png')
+    with col2:
+        st.image(f'data/graphs/Sentiment_Analysis/by_emotion/repartition/by_{groupby_option}/{emotion}_{time_period}.png')
+    # # case where "all time" is chosen, the files weren't saved with the "all time" suffix -> Could be updated in the image generation part
+    # if time_period == "all_time":
+    #     with col2:
+    #         st.image(f'data/graphs/Sentiment_Analysis/by_emotion/repartition/by_{groupby_option}/{emotion}_{time_period}.png')
+    # # any other case where time_period isn't "all time"
+    # else:
+    #     with col2:
+    #         st.image(f'data/graphs/Sentiment_Analysis/by_emotion/repartition/by_{groupby_option}/{emotion}_{time_period}.png')
 
 elif groupby_option=="year":
     col1, col2, col3 = st.columns([1,3,1])
     with col2:
-        st.image(f'data/graphs/emotions/{emotion}_by_{groupby_option}.png') 
+        st.image(f'data/graphs/Sentiment_Analysis/by_emotion/repartition/by_{groupby_option}/{emotion}.png') 
 
 
 
@@ -176,17 +197,17 @@ st.subheader("Repartition of the emotions within a subclass")
 st.write("""Here we can track the repartition of a specific emotion according to a specified data group.\n\n""")
 emotion = st.selectbox('Which emotion do you want to see the repartition ?',my_data["emotions"])
 groupby_option = st.selectbox('With which class do you want to see the topic repartition of the emotion chosen?',groupby_options)
-print_graph_html(f'data/graphs/topics_per_class/topic_model_merged/per_{shorter_names[groupby_option]}/for_emotion/{emotion}.html', height=750)
+print_graph_html(f'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/emotion_by_class/by_{groupby_option}/{emotion}.html', height=750)
 
 
-st.subheader("Emotion Repartition according to a subclass AND the topics")
-st.write("""Let's check the repartition of a specific emotion according to a specified data group AND according to the topics.\n\n""")
+st.subheader("Emotions Repartition according to a subclass AND the topics")
+st.write("""Let's check the repartition of emotions according to a specified data group AND according to the topics.\n\n""")
 groupby_option = st.selectbox('By which class do you want to see the emotion topic repartition?',groupby_options)
 # Propose to the user to choose one of the values that exist in his precedent chosen class
-options = [x for x in my_data[groupby_option] if groupby_option != "year" or x != "all time"]
+options = [x for x in my_data[groupby_option] if groupby_option != "year" or x != "all_time"]
 value = st.selectbox(f'By which {shorter_names[groupby_option]} do you want to see the emotion topic repartition?',options)
 
-print_graph_html(f'data/graphs/topics_per_class/topic_model_merged/per_emotion/for_{shorter_names[groupby_option]}/{value}.html', height=750)
+print_graph_html(f'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/class_by_emotions/by_{groupby_option}/{value}.html', height=750)
 
 
 # Custom footer workaround to overide default streamlit footer
