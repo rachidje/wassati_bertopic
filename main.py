@@ -12,7 +12,7 @@ nltk.download('stopwords')
 stopwords = nltk.corpus.stopwords.words('english')
 stopwords.extend(more_stopwords)
 
-df = read_csv("data/schneider.csv")
+df = read_csv("data/csv_files/schneider.csv")
 schneiderDataLoader = SchneiderDataLoader(df, countries_to_update)
 preprocessing = Preprocessor(
     schneiderDataLoader, 
