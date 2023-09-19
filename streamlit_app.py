@@ -76,7 +76,7 @@ def print_freq_pct_choice(session_var, path, **kwargs):
     """
     extension = os.path.splitext(path)[1]
     root = os.path.splitext(path)[0]
-    if st.session_state[session_var]== "By Frequency":
+    if st.session_state[session_var]== "By Count":
         print_graph(path, **kwargs)
     elif st.session_state[session_var]== "By Percentage":
         print_graph(root+"_pct"+extension, **kwargs)

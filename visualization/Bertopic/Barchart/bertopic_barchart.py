@@ -6,7 +6,6 @@ from typing import List, Union
 from sklearn.preprocessing import normalize
 from ....Shared.Barchart.abstract_barchart import add_percentage
 
-
 class BertopicBarchart:
     def create_topics_per_class_df(df, bertopic_model, classes_column, filter=False, filter_group=None, filter_value=None,  sortedBy=None, ascending=True):
         """
