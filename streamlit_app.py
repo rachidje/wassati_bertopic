@@ -12,7 +12,8 @@ st.title("Schneider Electric Verbatim Analysis")
 
 @st.cache_data
 def load_data():
-    data = pd.read_csv('/media/cattiaux/DATA/Wassati/team_data/schneider/df_all_labelled.csv')
+    # data = pd.read_csv('/media/cattiaux/DATA/Wassati/team_data/schneider/df_all_labelled.csv')
+    data = pd.read_csv('data/csv_files/df_all_labelled.csv')
     return data
 
 def print_graph(path, height=None, width=None):
