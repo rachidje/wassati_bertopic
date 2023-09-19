@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import plotly.express as px
 import random
+import pandas as pd
 
 class AbstractBarchart(ABC):
     @abstractmethod
