@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -14,19 +15,32 @@ def load_data():
     data = pd.read_csv('/media/cattiaux/DATA/Wassati/team_data/schneider/df_all_labelled.csv')
     return data
 
-def print_graph_html(path, height=None, width=None):
+def print_graph(path, height=None, width=None):
     graph = open(path)
-    return components.html(graph.read(), height=height, width=width)
+    # get the extension
+    extension = os.path.splitext(path)[1]
+    if extension==".html":
+        return components.html(graph.read(), height=height, width=width)
+    elif extension==".png":
+        return st.image(path)
 
 def data_representation_buttons(session_var, button_col_freq, button_col_pct):
     # Initialize session state for the selection
     if session_var not in st.session_state:
         st.session_state[session_var] = 'By Frequency'
     # Create buttons and handle selection
-    if button_col_freq.button('By Frequency'):
+    if button_col_freq.button('By Frequency', key=session_var+"_freq"):
         st.session_state[session_var] = 'By Frequency'
-    if button_col_pct.button('By Percentage'):
+    if button_col_pct.button('By Percentage', key=session_var+"_pct"):
         st.session_state[session_var] = 'By Percentage'
+
+def print_freq_pct_choice(session_var, path, **kwargs):
+    extension = os.path.splitext(path)[1]
+    root = os.path.splitext(path)[0]
+    if st.session_state[session_var]== "By Frequency":
+        print_graph(path, **kwargs)
+    elif st.session_state[session_var]== "By Percentage":
+        print_graph(root+"_pct"+extension, **kwargs)
 
 
 data = load_data()
@@ -63,15 +77,15 @@ Over the years, NLP has evolved significantly, with the rise of advanced machine
 col1, col2 = st.columns([1,1.7])
 with col1:
     st.markdown("<h3 style='text-align: center; color: black;'>Many very precise topics</h3>", unsafe_allow_html=True)
-    print_graph_html('data/graphs/Clustering/global/topic_visualize_topics.html', height=750)
+    print_graph('data/graphs/Clustering/global/topic_visualize_topics.html', height=750)
 with col2:
     st.markdown("<h3 style='text-align: center; color: black;'>The biggest 12 topics keywords</h3>", unsafe_allow_html=True)
-    print_graph_html('data/graphs/Clustering/global/top_12_topics_barchart_viz.html', height=750)
+    print_graph('data/graphs/Clustering/global/top_12_topics_barchart_viz.html', height=750)
 
 
 st.subheader('''Topics hierarchy''')
 st.write("""Let's ordered all those topics hierarchicaly\n\n""")
-print_graph_html('data/graphs/Clustering/hierarchy/topics_hierarchy.html', height=1050)
+print_graph('data/graphs/Clustering/hierarchy/topics_hierarchy.html', height=1050)
 
 
 st.subheader('Aggregated Topics')
@@ -93,7 +107,7 @@ st.write(
 
 st.subheader('''Vizualize documents per aggregated topic''')
 st.write("""Let's regroup the many subtopics into the aggregated topics\n\n""")
-print_graph_html('data/graphs/Clustering/documents_viz/topic_merged_visualize_reduced_docs.html', height=750)
+print_graph('data/graphs/Clustering/documents_viz/topic_merged_visualize_reduced_docs.html', height=750)
 
 
 st.subheader('''Wordcloud''')
@@ -112,7 +126,7 @@ with col2:
 
 st.subheader('''Topic Evolution''')
 st.write("""Let's check the topics evolution in time (by months)\n\n""")
-print_graph_html('data/graphs/Clustering/topic_in_time/topic_merged_time_by_months.html', height=500)
+print_graph('data/graphs/Clustering/topic_in_time/topic_merged_time_by_months.html', height=500)
 
 
 st.subheader('''Heatmaps Graphics''')
@@ -121,10 +135,10 @@ st.write("""Let's see how the topics are related to each other\n\n""")
 col1, col2 = st.columns(2)
 with col1:
     st.markdown("<h4 style='text-align: center; color: grey;'>The global topics relations</h4>", unsafe_allow_html=True)
-    print_graph_html('data/graphs/Clustering/heatmap/topic_merged_heatmap.html', height=750)
+    print_graph('data/graphs/Clustering/heatmap/topic_merged_heatmap.html', height=750)
 with col2:
     st.markdown("<h4 style='text-align: center; color: grey;'>The sub-topics relations</h4>", unsafe_allow_html=True)
-    print_graph_html('data/graphs/Clustering/heatmap/topic_heatmap.html', height=750)
+    print_graph('data/graphs/Clustering/heatmap/topic_heatmap.html', height=750)
 
 
 st.subheader("Topic Repartition")
@@ -136,10 +150,8 @@ groupby_option = st.selectbox('Select group : by which class do you want to see 
 _, col2, col3, _ = st.columns([3,1,1,7])
 data_representation_buttons("topic_repartition", col2, col3)
 # Produces topic_per_class barchart
-if st.session_state["topic_repartition"]== "By Frequency":
-    print_graph_html(f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}.html', height=750)
-elif st.session_state["topic_repartition"]== "By Percentage":
-    print_graph_html(f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}_pct.html', height=750)
+path = f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}.html'
+print_freq_pct_choice("topic_repartition", path, height=750)
 
 
 st.header("Sentiment Analysis")
@@ -150,13 +162,23 @@ st.write("""
 
 st.subheader('Sentiments and Emotions Repartition By Topic')
 st.write("""Let's study the global repartition by topic of the sentiments and emotions.\n\n""")
+
+
 col1, col2 = st.columns([1,2.3])
 with col1:
     st.markdown("<h4 style='text-align: center; color: grey;'>By Sentiment</h4>", unsafe_allow_html=True)
-    print_graph_html('data/graphs/Sentiment_Analysis/by_sentiment/repartition_per_topic/global/model_merged_per_sentiment.html', height=750)
+    # Add buttons to choose for frequency or percentage for the representation of the data 
+    subcol1, subcol2, subcol3, subcol4 = st.columns([1,1,1,1])
+    data_representation_buttons("sentiment_by_topic_global", subcol2, subcol3)
+    path = 'data/graphs/Sentiment_Analysis/by_sentiment/repartition_per_topic/global/model_merged_per_sentiment.html'
+    print_freq_pct_choice("sentiment_by_topic_global", path, height=750)
 with col2:
     st.markdown("<h4 style='text-align: center; color: grey;'>By Emotion</h4>", unsafe_allow_html=True)
-    print_graph_html('data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/global/model_merged_per_emotion.html', height=750)
+    # Add buttons to choose for frequency or percentage for the representation of the data 
+    subcol1, subcol2, subcol3, subcol4 = st.columns([3,1,1,3])
+    data_representation_buttons("emotion_by_topic_global", subcol2, subcol3)
+    path = 'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/global/model_merged_per_emotion.html'
+    print_freq_pct_choice("emotion_by_topic_global", path, height=750)
 
 
 st.subheader('Single emotion repartition')
@@ -170,21 +192,18 @@ if groupby_option=='Zone' or groupby_option=='Clusters' or groupby_option=='Acco
     time_period = st.selectbox('Select the period of time you want to study',my_data["year"])
     col1, col2, col3 = st.columns([1,3,1])
     with col2:
-        st.image(f'data/graphs/Sentiment_Analysis/by_emotion/repartition/by_{groupby_option}/{emotion}_{time_period}.png')
-    # # case where "all time" is chosen, the files weren't saved with the "all time" suffix -> Could be updated in the image generation part
-    # if time_period == "all_time":
-    #     with col2:
-    #         st.image(f'data/graphs/Sentiment_Analysis/by_emotion/repartition/by_{groupby_option}/{emotion}_{time_period}.png')
-    # # any other case where time_period isn't "all time"
-    # else:
-    #     with col2:
-    #         st.image(f'data/graphs/Sentiment_Analysis/by_emotion/repartition/by_{groupby_option}/{emotion}_{time_period}.png')
+        subcol1, subcol2, subcol3, subcol4 = st.columns([1,1,1,1])
+        data_representation_buttons("single_emotion_repartition", subcol2, subcol3)
+        path = f'data/graphs/Sentiment_Analysis/by_emotion/repartition/by_{groupby_option}/{emotion}_{time_period}.png'
+        print_freq_pct_choice("single_emotion_repartition", path, height=750)
 
 elif groupby_option=="year":
     col1, col2, col3 = st.columns([1,3,1])
     with col2:
-        st.image(f'data/graphs/Sentiment_Analysis/by_emotion/repartition/by_{groupby_option}/{emotion}.png') 
-
+        subcol1, subcol2, subcol3, subcol4 = st.columns([2,1,1,2])
+        data_representation_buttons("single_emotion_repartition_year", subcol2, subcol3)
+        path = f'data/graphs/Sentiment_Analysis/by_emotion/repartition/by_{groupby_option}/{emotion}.png'
+        print_freq_pct_choice("single_emotion_repartition_year", path, height=750)
 
 
 texte = """Go deeper in the evolution of each emotion. 
@@ -197,7 +216,10 @@ st.subheader("Repartition of the emotions within a subclass")
 st.write("""Here we can track the repartition of a specific emotion according to a specified data group.\n\n""")
 emotion = st.selectbox('Which emotion do you want to see the repartition ?',my_data["emotions"])
 groupby_option = st.selectbox('With which class do you want to see the topic repartition of the emotion chosen?',groupby_options)
-print_graph_html(f'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/emotion_by_class/by_{groupby_option}/{emotion}.html', height=750)
+col1, col2, col3, col4 = st.columns([3,1,1,5])
+data_representation_buttons("single_emotion_by_group_and_topic", col2, col3)
+path = f'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/emotion_by_class/by_{groupby_option}/{emotion}.html'
+print_freq_pct_choice("single_emotion_by_group_and_topic", path, height=750)
 
 
 st.subheader("Emotions Repartition according to a subclass AND the topics")
@@ -206,8 +228,10 @@ groupby_option = st.selectbox('By which class do you want to see the emotion top
 # Propose to the user to choose one of the values that exist in his precedent chosen class
 options = [x for x in my_data[groupby_option] if groupby_option != "year" or x != "all_time"]
 value = st.selectbox(f'By which {shorter_names[groupby_option]} do you want to see the emotion topic repartition?',options)
-
-print_graph_html(f'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/class_by_emotions/by_{groupby_option}/{value}.html', height=750)
+col1, col2, col3, col4 = st.columns([3,1,1,5])
+data_representation_buttons("singlevalue_group_by_emotions_and_topic", col2, col3)
+path = f'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/class_by_emotions/by_{groupby_option}/{value}.html'
+print_freq_pct_choice("singlevalue_group_by_emotions_and_topic", path, height=750)
 
 
 # Custom footer workaround to overide default streamlit footer
