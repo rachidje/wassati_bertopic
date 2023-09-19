@@ -12,11 +12,27 @@ st.title("Schneider Electric Verbatim Analysis")
 
 @st.cache_data
 def load_data():
-    # data = pd.read_csv('/media/cattiaux/DATA/Wassati/team_data/schneider/df_all_labelled.csv')
+    """
+    Loads data from a CSV file.
+
+    Returns:
+    pandas.DataFrame: The loaded data.
+    """
     data = pd.read_csv('data/csv_files/df_all_labelled.csv')
     return data
 
 def print_graph(path, height=None, width=None):
+    """
+    Prints a graph from a specified file path.
+
+    Parameters:
+    path (str): The file path of the graph.
+    height (int, optional): The height of the graph. Defaults to None.
+    width (int, optional): The width of the graph. Defaults to None.
+
+    Returns:
+    None
+    """
     graph = open(path)
     # get the extension
     extension = os.path.splitext(path)[1]
@@ -26,16 +42,38 @@ def print_graph(path, height=None, width=None):
         return st.image(path)
 
 def data_representation_buttons(session_var, button_col_freq, button_col_pct):
+    """
+    Creates two buttons for selecting data representation and updates the session state based on the selection.
+
+    Parameters:
+    session_var (str): The session state variable that stores the selected data representation.
+    button_col_freq (streamlit.delta_generator.DeltaGenerator): The Streamlit column for the 'By Count' button.
+    button_col_pct (streamlit.delta_generator.DeltaGenerator): The Streamlit column for the 'By Percentage' button.
+
+    Returns:
+    None
+    """
     # Initialize session state for the selection
     if session_var not in st.session_state:
-        st.session_state[session_var] = 'By Frequency'
+        st.session_state[session_var] = 'By Count'
     # Create buttons and handle selection
-    if button_col_freq.button('By Frequency', key=session_var+"_freq"):
-        st.session_state[session_var] = 'By Frequency'
+    if button_col_freq.button('By Count', key=session_var+"_freq"):
+        st.session_state[session_var] = 'By Count'
     if button_col_pct.button('By Percentage', key=session_var+"_pct"):
         st.session_state[session_var] = 'By Percentage'
 
-def print_freq_pct_choice(session_var, path, **kwargs):
+def print_freq_pct_choice(session_var, path, **kwargs): 
+    """
+    Prints the graph specified by the session variable.
+
+    Parameters:
+    session_var (str): The session state variable that determines which graph to print.
+    path (str): The file path of the graph.
+    **kwargs: Arbitrary keyword arguments for the print_graph function.
+
+    Returns:
+    None
+    """
     extension = os.path.splitext(path)[1]
     root = os.path.splitext(path)[0]
     if st.session_state[session_var]== "By Frequency":
