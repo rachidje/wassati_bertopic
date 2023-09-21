@@ -2,13 +2,16 @@ import numpy as np
 import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import wordnet
-from ...Shared.Wordcloud.abstract_wordcloud import AbstractWordcloud
+from ...Shared.Wordcloud.wordcloud import WordcloudMaker
 
 class BertopicWordcloud:
     # Download required resources
     nltk.download('averaged_perceptron_tagger')
     nltk.download('wordnet')
     nltk.download('punkt')
+
+    def __init__(self, topic_model) -> None:
+        self.topic_model = topic_model
 
     def lemmatize_words(topic_words):
         """
@@ -24,7 +27,32 @@ class BertopicWordcloud:
         Returns:
             dict: A dictionary where the keys are the lemmas (str) and the values are their combined probabilities (float).
         """
-        def get_wordnet_pos(treebank_tag):
+        
+        # Create a lemmatizer object
+        lemmatizer = WordNetLemmatizer()
+        # Create a dictionary to store the lemmas and their probabilities
+        lemma_prob = {}
+
+        # Lemmatize each word and combine their probabilities
+        for word, prob in topic_words:
+            # Tokenize the word and get its part of speech
+            tokens = nltk.word_tokenize(word)
+            pos = nltk.pos_tag(tokens)[0][1]
+            # Get the WordNet part of speech tag
+            wordnet_pos = BertopicWordcloud.get_wordnet_pos(pos)
+            # Lemmatize the word
+            lemma = lemmatizer.lemmatize(word, pos=wordnet_pos)
+            
+            # Combine the probabilities of the lemma and its inflected forms
+            if lemma in lemma_prob:
+                lemma_prob[lemma] += prob
+            else:
+                lemma_prob[lemma] = prob
+        
+        return lemma_prob
+    
+    @staticmethod
+    def get_wordnet_pos(treebank_tag):
             """
             Convert NLTK part of speech tags to WordNet tags.
 
@@ -52,29 +80,7 @@ class BertopicWordcloud:
             else:
                 return wordnet.NOUN
 
-        # Create a lemmatizer object
-        lemmatizer = WordNetLemmatizer()
-        # Create a dictionary to store the lemmas and their probabilities
-        lemma_prob = {}
-
-        # Lemmatize each word and combine their probabilities
-        for word, prob in topic_words:
-            # Tokenize the word and get its part of speech
-            tokens = nltk.word_tokenize(word)
-            pos = nltk.pos_tag(tokens)[0][1]
-            # Get the WordNet part of speech tag
-            wordnet_pos = get_wordnet_pos(pos)
-            # Lemmatize the word
-            lemma = lemmatizer.lemmatize(word, pos=wordnet_pos)
-            
-            # Combine the probabilities of the lemma and its inflected forms
-            if lemma in lemma_prob:
-                lemma_prob[lemma] += prob
-            else:
-                lemma_prob[lemma] = prob
-        
-        return lemma_prob
-
+    @staticmethod
     def recalculate_probabilities(lemma_prob, docs, topic_model):
         """
         Recalculate the c-TF-IDF scores for the lemmas.
@@ -126,7 +132,7 @@ class BertopicWordcloud:
         
         return new_lemma_prob
 
-    def get_topic_words(bertopic_model, topic, top_n=10):
+    def get_topic_words(self, topic, top_n=10):
         """
         Get the top n words for a given topic.
 
@@ -143,8 +149,8 @@ class BertopicWordcloud:
             list: A list of tuples, where each tuple contains a word (str) and its probability (float).
         """
         # Get the c-TF-IDF matrix and feature names
-        c_tf_idf = bertopic_model.c_tf_idf_.toarray()
-        feature_names = bertopic_model.vectorizer_model.get_feature_names_out()
+        c_tf_idf = self.topic_model.c_tf_idf_.toarray()
+        feature_names = self.topic_model.vectorizer_model.get_feature_names_out()
         
         # Get the row of the c-TF-IDF matrix corresponding to the topic
         topic_row = c_tf_idf[topic]
@@ -159,60 +165,61 @@ class BertopicWordcloud:
         # Return the words and their probabilities as a list of tuples
         return list(zip(words, probabilities))
 
-    def group_docs_by_topic(docs, bertopic_model):
+    def group_docs_by_topic(docs, topic_model):
         """
         Group documents by their assigned topic.
 
-        This function takes as input a list of documents `docs` and a BERTopic model `bertopic_model`. It creates a dictionary where the keys are topic numbers and the values are lists of documents assigned to each topic.
+        This function takes as input a list of documents `docs` and a BERTopic model `topic_model`. It creates a dictionary where the keys are topic numbers and the values are lists of documents assigned to each topic.
 
         Parameters:
             docs (list): A list of documents used to fit the BERTopic model.
-            bertopic_model (BERTopic): The BERTopic model used to assign topics to the documents.
+            topic_model (BERTopic): The BERTopic model used to assign topics to the documents.
 
         Returns:
             dict: A dictionary where the keys are topic numbers (int) and the values are lists of documents (list) assigned to each topic.
         """
         docs_by_topic = {}
-        for doc, topic in zip(docs, bertopic_model.topics_):
+        for doc, topic in zip(docs, topic_model.topics_):
             if topic+1 not in docs_by_topic:
                 docs_by_topic[topic+1] = []
             docs_by_topic[topic+1].append(doc)
         
         return docs_by_topic 
     
-    def get_word_freq(self, bertopic_model, docs, topic, top_n=10, scale=1, lemmatize=False):
+    def get_word_freq(self, docs, topic, top_n=10, scale=1, lemmatize=False):
         """
         Get the word frequencies for a given topic.
 
-        This function takes as input a BERTopic model `bertopic_model`, a list of documents `docs`, a topic number `topic`, an optional integer parameter `top_n` specifying the number of words to include, an optional float parameter `scale` used to scale the probabilities of the words and an optional boolean parameter `lemmatize` which determines whether to lemmatize the words before calculating their frequencies.
+        This function takes as input a BERTopic model `topic_model`, a list of documents `docs`, a topic number `topic`, an optional integer parameter `top_n` specifying the number of words to include, an optional float parameter `scale` used to scale the probabilities of the words and an optional boolean parameter `lemmatize` which determines whether to lemmatize the words before calculating their frequencies.
 
         The function first retrieves the top n words for the given topic using the `get_topic_words` function and scales their probabilities using the provided `scale` parameter. If `lemmatize` is `True`, the function lemmatizes the words using the `lemmatize_words` function and recalculates their probabilities using the `recalculate_probabilities` function. Otherwise, it uses the original words and their probabilities.
 
-        Parameters:
-            bertopic_model (BERTopic): The BERTopic model used to calculate the topic words.
+        Parameters
+        ----------
             docs (list): A list of documents used to fit the BERTopic model.
             topic (int): The topic number for which to calculate the word frequencies.
             top_n (int): An optional integer parameter specifying the number of words to include. Defaults to 10.
             scale (float): An optional float parameter used to scale the probabilities of the words. Defaults to 1.
             lemmatize (bool): An optional boolean parameter used to determine whether to lemmatize the words before calculating their frequencies. Defaults to False.
 
-        Returns:
+        Returns
+        -------
             dict: A dictionary where the keys are the words/lemmas (str) and the values are their probabilities (float).
         """
         # Get the topic words and their probabilities
-        topic_words = self.get_topic_words(bertopic_model, topic, top_n=top_n)
+        topic_words = self.get_topic_words(self.topic_model, topic, top_n=top_n)
         # Scale the probabilities
         topic_words = [(word, prob ** scale) for word, prob in topic_words]
 
         if lemmatize:
             # Group documents by their assigned topic.
-            docs_by_topic = self.group_docs_by_topic(docs, bertopic_model)
+            docs_by_topic = self.group_docs_by_topic(docs, self.topic_model)
             # get the documents assigned to a specific topic
             my_docs = docs_by_topic.get(topic, [])
             # Lemmatize the words and combine their probabilities
             lemma_prob = self.lemmatize_words(topic_words)
             # Recalculate the c-TF-IDF scores for the lemmas
-            topic_words_lemma = self.recalculate_probabilities(lemma_prob, my_docs, bertopic_model)
+            topic_words_lemma = BertopicWordcloud.recalculate_probabilities(lemma_prob, my_docs, self.topic_model)
             # Create a dictionary with the lemmas and their probabilities
             word_freq = {lemma: prob for lemma, prob in topic_words_lemma.items()}
         
@@ -222,12 +229,12 @@ class BertopicWordcloud:
         
         return word_freq 
     
-    def create_wordclouds_bertopic(bertopic_model, word_freq_dict, lemmatize=False, stopwords=None, wordcloud_kwargs=None, to_save=False, save_path=None):
+    def create_wordclouds_bertopic(self, word_freq_dict, lemmatize=False, stopwords=None, wordcloud_kwargs=None, to_save=False, save_path=None):
         """
         Creates word clouds for each topic in a BERTopic model.
 
-        Parameters:
-        bertopic_model (BERTopic): The BERTopic model.
+        Parameters
+        ----------
         word_freq_dict (dict): A dictionary where keys are words and values are their frequencies.
         lemmatize (bool, optional): If True, lemmatize the words before creating the word cloud. Defaults to False.
         stopwords (list, optional): A list of words to be removed from the word_freq_dict. Defaults to None.
@@ -246,11 +253,11 @@ class BertopicWordcloud:
             raise ValueError("If to_save is True, save_path must be provided")
         
         # Get the topic information
-        topic_info = bertopic_model.get_topic_info()
+        topic_info = self.topic_model.get_topic_info()
         # Set the index of the DataFrame to be the topic number
         topic_info = topic_info.set_index('Topic')
 
-        wc = AbstractWordcloud()
+        wc = WordcloudMaker()
 
         wc_pics={}
         # Loop over the topic numbers in the DataFrame
