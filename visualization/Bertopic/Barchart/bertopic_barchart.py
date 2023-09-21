@@ -1,14 +1,25 @@
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.io as pio
 import os
 from typing import List, Union
 from sklearn.preprocessing import normalize
-from ....visualization.Shared.Barchart.barchart import Barchart
+from visualization.Shared.Barchart.barchart import Barchart
 
 class BertopicBarchart(Barchart):
 
     def __init__(self, df, bertopic_model, classes_column, filter=False, filter_group=None, filter_value=None,  sortedBy=None, ascending=True) -> None:
+        """
+        Parameters
+        ----------
+            df (pandas.DataFrame): The input dataframe containing the data to be used.
+            bertopic_model (BERTopic): The BERTopic model used to calculate the topics per class.
+            classes_column (str): The name of the column in `df` representing the classes.
+            filter (bool): An optional boolean parameter used to determine whether to filter the data based on a subclass. Defaults to False.
+            filter_group (str): An optional parameter representing the column name of the subclass to filter on. Only used if `filter` is True. Defaults to None.
+            filter_value: An optional parameter representing the value of the subclass to filter on. Only used if `filter` is True. Defaults to None.
+            sortedBy (str): An optional parameter used to sort the topics by either "Frequency" or "Name". Defaults to None.
+            ascending (bool): An optional boolean parameter used to determine the sorting order. If True, sorts in ascending order. If False, sorts in descending order. Defaults to True.
+        """
         self.df = df.copy()
         self.bertopic_model = bertopic_model
         self.classes_column = classes_column
@@ -76,15 +87,7 @@ class BertopicBarchart(Barchart):
 
         The resulting dataframe is then returned.
 
-        Parameters:
-            df (pandas.DataFrame): The input dataframe containing the data to be used.
-            bertopic_model (BERTopic): The BERTopic model used to calculate the topics per class.
-            classes_column (str): The name of the column in `df` representing the classes.
-            filter (bool): An optional boolean parameter used to determine whether to filter the data based on a subclass. Defaults to False.
-            filter_group (str): An optional parameter representing the column name of the subclass to filter on. Only used if `filter` is True. Defaults to None.
-            filter_value: An optional parameter representing the value of the subclass to filter on. Only used if `filter` is True. Defaults to None.
-            sortedBy (str): An optional parameter used to sort the topics by either "Frequency" or "Name". Defaults to None.
-            ascending (bool): An optional boolean parameter used to determine the sorting order. If True, sorts in ascending order. If False, sorts in descending order. Defaults to True.
+        
 
         Returns:
             pandas.DataFrame: A dataframe representing the topics per class.

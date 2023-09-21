@@ -1,8 +1,8 @@
-import numpy as np
 import nltk
+import numpy as np
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import wordnet
-from ...Shared.Wordcloud.wordcloud import WordcloudMaker
+from visualization.Shared.Wordcloud.wordcloud import WordcloudMaker
 
 class BertopicWordcloud:
     # Download required resources
