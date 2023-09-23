@@ -68,37 +68,44 @@ class AbstractBarchart(ABC):
 
         return fig
     
-    def add_percentage(df, topic_col='Topic', freq_col='Frequency', class_col=None):
+    def add_percentage(df, topic_col='Topic', freq_col='Frequency', class_col=None, group_by=None):
         """
-        This function adds a percentage column to a dataframe. The percentage is calculated as the frequency of each class within each topic.
+        This function adds a percentage column to a dataframe. The percentage is calculated as the frequency of each topic within each class.
         
         Parameters:
         df (DataFrame): The input dataframe.
         topic_col (str, optional): The name of the topic column in the dataframe. Defaults to 'Topic'.
         freq_col (str, optional): The name of the frequency column in the dataframe. Defaults to 'Frequency'.
-        class_col (str, optional): The name of the class column in the dataframe. If specified, the function will calculate the percentage for each class within each topic. Defaults to None.
+        class_col (str, optional): The name of the class column in the dataframe. If specified, the function will calculate the percentage for each topic within each class. Defaults to None.
+        group_by (str, optional): Specifies whether to group by 'topic' or 'class'. Defaults to 'topic' if class_col is None, else defaults to 'class'.
 
         Returns:
         DataFrame: A dataframe with an added 'Percentage' column.
+        
+        Raises:
+        ValueError: If `group_by` is not 'topic' or 'class'.
         """
+        if group_by is None:
+            group_by = 'Topic' if class_col is None else 'Class'
+            
+        if group_by not in ['Topic', 'Class']:
+            raise ValueError("`group_by` should be either 'Topic' or 'Class'")
+            
         # Check if columns exist in dataframe
         for col in [col for col in [topic_col, class_col, freq_col] if col is not None]:
             if col not in df.columns:
                 print(f"Warning: Column '{col}' not found in dataframe. The function will proceed with default column names.")
 
-        # Group by 'Topic' and optionally 'Class', and sum the 'Frequency'
-        group_cols = [topic_col]
-        if class_col:
-            group_cols.append(class_col)
-        df_grouped = df.groupby(group_cols)[freq_col].sum().reset_index()
-
-        # Calculate the total frequency per topic
-        df_total = df.groupby(topic_col)[freq_col].sum().reset_index()
-        df_total.columns = [topic_col, 'Total']
+        # Calculate the total frequency per group
+        if group_by == 'Topic' or class_col is None:
+            df_total = df.groupby(topic_col)[freq_col].sum().reset_index()
+        else:  # group_by == 'Class'
+            df_total = df.groupby(class_col)[freq_col].sum().reset_index()
+            
+        df_total.columns = [group_by, 'Total']
 
         # Merge these two dataframes
-        df_merged = pd.merge(df, df_total, on=topic_col)
-
+        df_merged = pd.merge(df, df_total, on=group_by)
         # Calculate the percentage and round to 2 decimal places
         df_merged['Percentage'] = (df_merged[freq_col] / df_merged['Total'] * 100).round(2)
         
