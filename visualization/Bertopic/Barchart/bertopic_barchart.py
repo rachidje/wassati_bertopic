@@ -30,7 +30,7 @@ class BertopicBarchart(Barchart):
         self.ascending = ascending
 
     # Define a function to compute topics_per_class with filtering
-    def topics_per_subclass(self):
+    def topics_per_subclass(self) -> pd.DataFrame:
         """
         Create a dataframe that contains the topic number, the list of words that describe the topic,
         and the frequency of documents from this topic that belong to the element from the first "Class" column
@@ -68,7 +68,7 @@ class BertopicBarchart(Barchart):
         
         return topics_per_subClass_df
 
-    def create_topics_per_class_df(self):
+    def create_topics_per_class_df(self) -> pd.DataFrame:
         """
         Create a dataframe representing the topics per class.
 
@@ -292,7 +292,7 @@ class BertopicBarchart(Barchart):
 
 
 btc = BertopicBarchart()
-df_topic_per_class = btc.create_chart_per_class_df()
-btc.visualize_topics_per_class_options()
+# df_topic_per_class = btc.create_chart_per_class_df()
+# btc.visualize_topics_per_class_options()
 
 btc.create_chart_per_class() # qui appelle les 2 fonctions du dessus
