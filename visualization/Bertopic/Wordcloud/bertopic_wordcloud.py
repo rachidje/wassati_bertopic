@@ -91,12 +91,14 @@ class BertopicWordcloud:
 
         The resulting dictionary, where the keys are the lemmas and the values are their updated probabilities, is then returned.
 
-        Parameters:
+        Parameters
+        ----------
             lemma_prob (dict): A dictionary where the keys are the lemmas (str) and the values are their probabilities (float).
             docs (list): A list of documents used to fit the BERTopic model.
             topic_model (BERTopic): The BERTopic model used to calculate the c-TF-IDF scores.
 
-        Returns:
+        Returns
+        -------
             dict: A dictionary where the keys are the lemmas (str) and the values are their updated probabilities (float).
         """
         # Calculate the term frequencies using the provided CountVectorizer
@@ -140,12 +142,14 @@ class BertopicWordcloud:
 
         The function first retrieves the c-TF-IDF matrix and feature names from the BERTopic model. Then, it gets the row of the c-TF-IDF matrix corresponding to the given topic and uses it to find the indices of the top n words. Finally, it retrieves the words and their probabilities and returns them as a list of tuples.
 
-        Parameters:
+        Parameters
+        ----------
             topic_model (BERTopic): The BERTopic model used to calculate the topic words.
             topic (int): The topic number for which to retrieve the top n words.
             top_n (int): An optional integer parameter specifying the number of words to return. Defaults to 10.
 
-        Returns:
+        Returns
+        -------
             list: A list of tuples, where each tuple contains a word (str) and its probability (float).
         """
         # Get the c-TF-IDF matrix and feature names
@@ -171,11 +175,13 @@ class BertopicWordcloud:
 
         This function takes as input a list of documents `docs` and a BERTopic model `topic_model`. It creates a dictionary where the keys are topic numbers and the values are lists of documents assigned to each topic.
 
-        Parameters:
+        Parameters
+        ----------
             docs (list): A list of documents used to fit the BERTopic model.
             topic_model (BERTopic): The BERTopic model used to assign topics to the documents.
 
-        Returns:
+        Returns
+        -------
             dict: A dictionary where the keys are topic numbers (int) and the values are lists of documents (list) assigned to each topic.
         """
         docs_by_topic = {}
@@ -235,18 +241,20 @@ class BertopicWordcloud:
 
         Parameters
         ----------
-        word_freq_dict (dict): A dictionary where keys are words and values are their frequencies.
-        lemmatize (bool, optional): If True, lemmatize the words before creating the word cloud. Defaults to False.
-        stopwords (list, optional): A list of words to be removed from the word_freq_dict. Defaults to None.
-        wordcloud_kwargs (dict, optional): A dictionary of arguments to be passed to the WordCloud constructor. Defaults to None.
-        to_save (bool, optional): If True, save the word clouds to disk. Defaults to False.
-        save_path (str, optional): The path where the word clouds should be saved. Required if to_save is True.
+            word_freq_dict (dict): A dictionary where keys are words and values are their frequencies.
+            lemmatize (bool, optional): If True, lemmatize the words before creating the word cloud. Defaults to False.
+            stopwords (list, optional): A list of words to be removed from the word_freq_dict. Defaults to None.
+            wordcloud_kwargs (dict, optional): A dictionary of arguments to be passed to the WordCloud constructor. Defaults to None.
+            to_save (bool, optional): If True, save the word clouds to disk. Defaults to False.
+            save_path (str, optional): The path where the word clouds should be saved. Required if to_save is True.
 
-        Returns:
-        dict: A dictionary where keys are topic names and values are WordCloud objects.
+        Returns
+        -------
+            dict: A dictionary where keys are topic names and values are WordCloud objects.
 
-        Raises:
-        ValueError: If to_save is True but save_path is not provided.
+        Raises
+        ------
+            ValueError: If to_save is True but save_path is not provided.
         """
         # Check that save_path is provided if to_save is True
         if to_save and save_path is None:
@@ -273,3 +281,9 @@ class BertopicWordcloud:
                 wc_pic.to_file(f'{save_path}/{topic_custom_name}.png')
 
         return wc_pics
+
+
+
+bwc = BertopicWordcloud()
+word_freq_dict = bwc.get_word_freq()
+bwc.create_wordclouds_bertopic(word_freq_dict)

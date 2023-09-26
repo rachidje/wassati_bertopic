@@ -20,8 +20,9 @@ class BertopicTopDocs:
         """
         Get the top n documents for a specified topic.
         
-        Returns:
-        tuple: A tuple containing a dataframe with the top n documents for the specified topic and a list with their content.
+        Returns
+        -------
+            tuple: A tuple containing a dataframe with the top n documents for the specified topic and a list with their content.
         """
         
         
@@ -72,3 +73,6 @@ class BertopicTopDocs:
         sorted_top_docs_indices = top_docs_indices[np.argsort(scores)[::-1]]
         
         return sorted_top_docs_indices
+    
+btd = BertopicTopDocs()
+top_docs_df, top_docs_content = btd.get_top_topic_docs()

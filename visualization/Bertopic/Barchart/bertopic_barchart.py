@@ -20,7 +20,7 @@ class BertopicBarchart(Barchart):
             sortedBy (str): An optional parameter used to sort the topics by either "Frequency" or "Name". Defaults to None.
             ascending (bool): An optional boolean parameter used to determine the sorting order. If True, sorts in ascending order. If False, sorts in descending order. Defaults to True.
         """
-        self.df = df.copy()
+        super().__init__(df)
         self.bertopic_model = bertopic_model
         self.classes_column = classes_column
         self.filter = filter
@@ -37,14 +37,9 @@ class BertopicBarchart(Barchart):
         for a subset of data that is filtered by a given subclass value.
         Basically it does the same as topics_per_class method from bertopic adding a filter that depends on an other class
 
-        :param df: A pandas DataFrame containing the full data
-        :param bertopic_model: A bertopic model used to compute the topics
-        :param classes_column: The name of the column in df that contains the class values
-        :param filter_group: The name of the column in df that contains the subclass values (the filter values)
-        :param filter_value: The value of the subclass to filter the data by
-        :return: A pandas DataFrame containing the topic number, the list of words that describe the topic,
-                and the frequency of documents from this topic that belong to the element from the first "Class" column
-                for the filtered data (subclass data)
+        Returns
+        ------- 
+            A pandas DataFrame containing the topic number, the list of words that describe the topic, and the frequency of documents from this topic that belong to the element from the first "Class" column for the filtered data (subclass data)
         """
         # Filter your data based on the values from the chosen subclass
         filtered_data = self.df[self.df[self.filter_group] == self.filter_value]
@@ -119,11 +114,11 @@ class BertopicBarchart(Barchart):
  
         return topics_per_class
     
-    # Modify the visualize_topics_per_class method from bertopic to be able to print a barchart vertically
     @classmethod
     def visualize_topics_per_class_orient(cls, topic_model, topics_per_class: pd.DataFrame, top_n_topics: Union[int, None] = None, topics: List[int] = None, normalize_frequency: bool = False, use_percentage: bool = False, custom_labels: Union[bool, str] = False, title: str = "<b>Topics per Class</b>", width: int = 1250, height: int = 900, orient: str = "h") -> go.Figure:
         """
         Visualizes the distribution of topics per class.
+        Modify the visualize_topics_per_class method from bertopic to be able to print a barchart vertically
 
         Parameters
         ----------
@@ -278,7 +273,7 @@ class BertopicBarchart(Barchart):
 
         return fig 
     
-    def save_plotly_graph_html(plotly_fig, path, name):
+    def save_plotly_graph_html(plotly_fig, path, name) -> None:
         """
         Saves a Plotly figure as an HTML file at the specified path.
 
@@ -293,5 +288,11 @@ class BertopicBarchart(Barchart):
         if not os.path.exists(path):
             os.makedirs(path)
             
-        return plotly_fig.write_html(path+"/"+name+".html")
+        plotly_fig.write_html(path+"/"+name+".html")
 
+
+btc = BertopicBarchart()
+df_topic_per_class = btc.create_chart_per_class_df()
+btc.visualize_topics_per_class_options()
+
+btc.create_chart_per_class() # qui appelle les 2 fonctions du dessus
