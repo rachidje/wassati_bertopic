@@ -4,8 +4,8 @@ import pandas as pd
 
 class Barchart:
 
-    def __init__(self, df) -> None:
-        self.df = df.copy()
+    def __init__(self, df_topic_per_class) -> None:
+        self.df_topic_per_class = df_topic_per_class.copy()
 
     def plot_emotion(self,
                      emotion, 
@@ -78,6 +78,44 @@ class Barchart:
 
         return fig
     
+    def topics_per_subclass(self, classes_column, bertopic_model, filter_group, filter_value) -> pd.DataFrame:
+        """
+        Create a dataframe that contains the topic number, the list of words that describe the topic,
+        and the frequency of documents from this topic that belong to the element from the first "Class" column
+        for a subset of data that is filtered by a given subclass value.
+        Basically it does the same as topics_per_class method from bertopic adding a filter that depends on an other class
+
+        Returns
+        ------- 
+            A pandas DataFrame containing the topic number, the list of words that describe the topic, and the frequency of documents from this topic that belong to the element from the first "Class" column for the filtered data (subclass data)
+        """
+        # Filter your data based on the values from the chosen subclass
+        filtered_data = self.df_topic_per_class[self.df_topic_per_class[filter_group] == filter_value]
+        classes_filtered_data=filtered_data[classes_column].astype(str).tolist()
+        filtered_topics = [bertopic_model.topics_[i] for i in filtered_data.index.tolist()]
+
+        # Create manually a topic_per_class dataframe from a subset of the full documents
+        topics_per_subClass_df = pd.DataFrame({'Topic': filtered_topics, 'Class': classes_filtered_data})
+        # Calculate the frequency of each topic for each class
+        topics_per_subClass_df = topics_per_subClass_df.groupby(['Topic', 'Class']).size().reset_index(name='Frequency')
+        # Add the words that describe each topic
+        topic_words = {row['Topic']: row['Name'] for _, row in bertopic_model.get_topic_info().iterrows()}
+        topics_per_subClass_df['Words'] = topics_per_subClass_df['Topic'].map(topic_words)
+
+        # Add rows for missing topics with a frequency of 0
+        missing_topics = set(bertopic_model.get_topics().keys()) - set(topics_per_subClass_df['Topic'].unique())
+        for topic in missing_topics:
+            for class_ in topics_per_subClass_df['Class'].unique():
+                new_row = pd.DataFrame({
+                    'Topic': [topic],
+                    'Words': [topic_words[topic]],
+                    'Frequency': [0],
+                    'Class': [class_]
+                })
+                topics_per_subClass_df = pd.concat([topics_per_subClass_df, new_row], ignore_index=True)
+        
+        return topics_per_subClass_df
+
     def add_percentage(self, topic_col='Topic', freq_col='Frequency', class_col=None):
         """
         This function adds a percentage column to a dataframe. The percentage is calculated as the frequency of each class within each topic.
@@ -95,21 +133,21 @@ class Barchart:
         """
         # Check if columns exist in dataframe
         for col in [col for col in [topic_col, class_col, freq_col] if col is not None]:
-            if col not in self.df.columns:
+            if col not in self.df_topic_per_class.columns:
                 print(f"Warning: Column '{col}' not found in dataframe. The function will proceed with default column names.")
 
         # Group by 'Topic' and optionally 'Class', and sum the 'Frequency'
         group_cols = [topic_col]
         if class_col:
             group_cols.append(class_col)
-        df_grouped = self.df.groupby(group_cols)[freq_col].sum().reset_index()
+        df_grouped = self.df_topic_per_class.groupby(group_cols)[freq_col].sum().reset_index()
 
         # Calculate the total frequency per topic
-        df_total = self.df.groupby(topic_col)[freq_col].sum().reset_index()
+        df_total = self.df_topic_per_class.groupby(topic_col)[freq_col].sum().reset_index()
         df_total.columns = [topic_col, 'Total']
 
         # Merge these two dataframes
-        df_merged = pd.merge(self.df, df_total, on=topic_col)
+        df_merged = pd.merge(self.df_topic_per_class, df_total, on=topic_col)
 
         # Calculate the percentage and round to 2 decimal places
         df_merged['Percentage'] = (df_merged[freq_col] / df_merged['Total'] * 100).round(2)

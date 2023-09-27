@@ -7,7 +7,7 @@ from visualization.Shared.Barchart.barchart import Barchart
 
 class BertopicBarchart(Barchart):
 
-    def __init__(self, df, bertopic_model, classes_column, filter=False, filter_group=None, filter_value=None,  sortedBy=None, ascending=True) -> None:
+    def __init__(self, df, bertopic_model, classes_column, filtering=False, filter_group=None, filter_value=None,  sortedBy=None, ascending=True) -> None:
         """
         Parameters
         ----------
@@ -20,53 +20,14 @@ class BertopicBarchart(Barchart):
             sortedBy (str): An optional parameter used to sort the topics by either "Frequency" or "Name". Defaults to None.
             ascending (bool): An optional boolean parameter used to determine the sorting order. If True, sorts in ascending order. If False, sorts in descending order. Defaults to True.
         """
-        super().__init__(df)
+        super().__init__(df.copy())
         self.bertopic_model = bertopic_model
         self.classes_column = classes_column
-        self.filter = filter
+        self.filtering = filtering
         self.filter_group = filter_group
         self.filter_value = filter_value
         self.sortedBy = sortedBy
         self.ascending = ascending
-
-    # Define a function to compute topics_per_class with filtering
-    def topics_per_subclass(self) -> pd.DataFrame:
-        """
-        Create a dataframe that contains the topic number, the list of words that describe the topic,
-        and the frequency of documents from this topic that belong to the element from the first "Class" column
-        for a subset of data that is filtered by a given subclass value.
-        Basically it does the same as topics_per_class method from bertopic adding a filter that depends on an other class
-
-        Returns
-        ------- 
-            A pandas DataFrame containing the topic number, the list of words that describe the topic, and the frequency of documents from this topic that belong to the element from the first "Class" column for the filtered data (subclass data)
-        """
-        # Filter your data based on the values from the chosen subclass
-        filtered_data = self.df[self.df[self.filter_group] == self.filter_value]
-        classes_filtered_data=filtered_data[self.classes_column].astype(str).tolist()
-        filtered_topics = [self.bertopic_model.topics_[i] for i in filtered_data.index.tolist()]
-
-        # Create manually a topic_per_class dataframe from a subset of the full documents
-        topics_per_subClass_df = pd.DataFrame({'Topic': filtered_topics, 'Class': classes_filtered_data})
-        # Calculate the frequency of each topic for each class
-        topics_per_subClass_df = topics_per_subClass_df.groupby(['Topic', 'Class']).size().reset_index(name='Frequency')
-        # Add the words that describe each topic
-        topic_words = {row['Topic']: row['Name'] for _, row in self.bertopic_model.get_topic_info().iterrows()}
-        topics_per_subClass_df['Words'] = topics_per_subClass_df['Topic'].map(topic_words)
-
-        # Add rows for missing topics with a frequency of 0
-        missing_topics = set(self.bertopic_model.get_topics().keys()) - set(topics_per_subClass_df['Topic'].unique())
-        for topic in missing_topics:
-            for class_ in topics_per_subClass_df['Class'].unique():
-                new_row = pd.DataFrame({
-                    'Topic': [topic],
-                    'Words': [topic_words[topic]],
-                    'Frequency': [0],
-                    'Class': [class_]
-                })
-                topics_per_subClass_df = pd.concat([topics_per_subClass_df, new_row], ignore_index=True)
-        
-        return topics_per_subClass_df
 
     def create_topics_per_class_df(self) -> pd.DataFrame:
         """
@@ -98,15 +59,15 @@ class BertopicBarchart(Barchart):
         if self.ascending not in [True, False]:
             raise ValueError("ascending must be either True or False")
         # Check that subclass_name and subclass_value are provided if filter is True
-        if filter and (self.filter_group is None or self.filter_value is None):
-            raise ValueError("If filter is True, both filter_name and filter_value must be provided")
+        if self.filtering and (self.filter_group is None or self.filter_value is None):
+            raise ValueError("If filtering is True, both filter_name and filter_value must be provided")
         
 
-        if filter:
-            topics_per_class_tmp = self.topics_per_subclass()
+        if self.filtering:
+            topics_per_class_tmp = self.topics_per_subclass(self.classes_column, self.bertopic_model, self.filter_group, self.filter_value)
             topics_per_class = self.add_percentage(topics_per_class_tmp, class_col="Class")
         else:
-            topics_per_class_tmp = self.bertopic_model.topics_per_class(self.df["processed_data"].astype(str).tolist(), classes=self.df[self.classes_column].to_list())
+            topics_per_class_tmp = self.bertopic_model.topics_per_class(self.df_topic_per_class["processed_data"].astype(str).tolist(), classes=self.df_topic_per_class[self.classes_column].to_list())
             topics_per_class = self.add_percentage(topics_per_class_tmp, class_col="Class")
 
         if self.sortedBy:
@@ -267,7 +228,7 @@ class BertopicBarchart(Barchart):
         Returns:
             plotly.graph_objs.Figure: The resulting chart representing the topics per class.
         """
-        topics_per_class = self.create_topics_per_class_df(self.df, self.bertopic_model, self.classes_column, filter=filter, filter_name=self.filter_group, filter_value=self.filter_value, sortedBy=self.sortedBy, ascending=self.ascending)
+        topics_per_class = self.create_topics_per_class_df()
 
         fig = self.visualize_topics_per_class_options(self.bertopic_model, topics_per_class, orient=orient, **kwargs)
 
@@ -291,8 +252,8 @@ class BertopicBarchart(Barchart):
         plotly_fig.write_html(path+"/"+name+".html")
 
 
-btc = BertopicBarchart()
-# df_topic_per_class = btc.create_chart_per_class_df()
-# btc.visualize_topics_per_class_options()
+# btc = BertopicBarchart()
+# # df_topic_per_class = btc.create_chart_per_class_df()
+# # btc.visualize_topics_per_class_options()
 
-btc.create_chart_per_class() # qui appelle les 2 fonctions du dessus
+# btc.create_chart_per_class() # qui appelle les 2 fonctions du dessus

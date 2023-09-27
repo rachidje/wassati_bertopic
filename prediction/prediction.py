@@ -16,7 +16,7 @@ class Prediction:
         self.classifier = classifier
         self.predictions = predictions
 
-    def make_predictions_df(self):
+    def make_predictions_df(self) -> pd.DataFrame:
         """
         This function makes predictions on a DataFrame of documents using a given classifier. It adds the predictions to 
         the DataFrame as new columns. If the classifier is for single-label classification, it adds one column for the 
@@ -42,7 +42,7 @@ class Prediction:
 
         return df_predicted
     
-    def add_single_label_predictions(self):
+    def add_single_label_predictions(self) -> pd.DataFrame:
         """
         This function merges the DataFrame of single-label predictions with the original DataFrame.
 
@@ -61,15 +61,14 @@ class Prediction:
         df_predicted = pd.concat([predicted_df, prediction_results], axis=1)
         return df_predicted
 
-    def add_multi_label_predictions(self):
+    def add_multi_label_predictions(self) -> pd.DataFrame:
         """
         This function adds a new column with multi-label predictions to the DataFrame and also adds two more columns for 
         the best label and its score.
 
         Returns
         -------
-            pd.DataFrame: The original DataFrame with added columns for the predicted labels and their scores, as well as 
-                        columns for the best label and its score.
+            pd.DataFrame: The original DataFrame with added columns for the predicted labels and their scores, as well as columns for the best label and its score.
         """
         predicted_df = self.df
         # Keep the original predictions as they are (a list of dictionaries) and add them to the DataFrame as a new column
