@@ -13,8 +13,6 @@ class BertopicBarchart(Barchart):
         """
         Create a chart representing the topics per class.
 
-        The function first calls the `create_topics_per_class_df` function to create a dataframe representing the topics per class. Then, it calls the `visualize_topics_per_class_options` function to create a chart from this dataframe. The resulting chart is then returned.
-
         Parameters
         ----------
             df (pandas.DataFrame): The input dataframe containing the data to be visualized.
@@ -30,12 +28,12 @@ class BertopicBarchart(Barchart):
         -------
             plotly.graph_objs.Figure: The resulting chart representing the topics per class.
         """
-        topics_per_class = self.create_topics_per_class_df(df, classes_column, filter_value=filter_value, sortedBy=sortedBy, ascending=ascending)
-        self.fig = self.visualize_topics_per_class_options(topics_per_class, orient=orient, viz_from_source=viz_from_source, stacked=stacked, percentage_by=percentage_by, **kwargs)
+        topics_per_class = self.__create_topics_per_class_df(df, classes_column, filter_value=filter_value, sortedBy=sortedBy, ascending=ascending)
+        self.fig = self.__visualize_topics_per_class_options(topics_per_class, orient=orient, viz_from_source=viz_from_source, stacked=stacked, percentage_by=percentage_by, **kwargs)
 
         return self.fig
     
-    def visualize_topics_per_class_orient(bertopic_model,topics_per_class: pd.DataFrame,top_n_topics: Union[int,None] = None,topics: List[int] = None,normalize_frequency: bool = False,percentage_by: Union[str,None] = None,custom_labels: Union[bool, str] = False,title: str = "<b>Topics per Class</b>",width: int = 1250,height: int = 900,orient: str = "h", stacked: bool = False) -> go.Figure:
+    def __visualize_topics_per_class_orient(self, bertopic_model,topics_per_class: pd.DataFrame,top_n_topics: Union[int,None] = None,topics: List[int] = None,normalize_frequency: bool = False,percentage_by: Union[str,None] = None,custom_labels: Union[bool, str] = False,title: str = "<b>Topics per Class</b>",width: int = 1250,height: int = 900,orient: str = "h", stacked: bool = False) -> go.Figure:
         """
         Visualizes the distribution of topics per class.
 
@@ -150,7 +148,7 @@ class BertopicBarchart(Barchart):
         )
         return fig
 
-    def visualize_topics_per_class_options(self, topics_per_class, orient="h", percentage_by=None, viz_from_source=False, stacked=False, **kwargs):
+    def __visualize_topics_per_class_options(self, topics_per_class, orient="h", percentage_by=None, viz_from_source=False, stacked=False, **kwargs):
         """
         Visualizes the distribution of topics per class with additional options for orientation and percentage usage.
 
@@ -175,11 +173,11 @@ class BertopicBarchart(Barchart):
             fig = self.bertopic_model.visualize_topics_per_class(topics_per_class, top_n_topics=None, **kwargs)
         else:  
             # using the modified source method to do it, adding the option to print the chart vertically
-            fig = BertopicBarchart.visualize_topics_per_class_orient(self.bertopic_model, topics_per_class, orient=orient, percentage_by=percentage_by, stacked= stacked, **kwargs)
+            fig = self.__visualize_topics_per_class_orient(self.bertopic_model, topics_per_class, orient=orient, percentage_by=percentage_by, stacked= stacked, **kwargs)
 
         return fig
 
-    def create_topics_per_class_df(self, df, classes_column, filter_value=None, sortedBy=None, ascending=True):
+    def __create_topics_per_class_df(self, df, classes_column, filter_value=None, sortedBy=None, ascending=True):
         """
         Computes the distribution of topics per class in the given DataFrame. Optionally filters the data by a given subclass and sorts the resulting DataFrame.
 
@@ -232,16 +230,16 @@ class BertopicBarchart(Barchart):
 
         # Check if there are existing custom_labels names in the bertopic model and add them in a column if there are some
         if self.bertopic_model.custom_labels_ is not None :
-            topics_per_class = self.add_customLabelCol(topics_per_class)
+            topics_per_class = self.__add_customLabelCol(topics_per_class)
         # Sort the dataframe to prepare the visualization
         if sortedBy:
             topics_per_class = topics_per_class.sort_values(by=sortedBy, ascending=ascending)
         
         return topics_per_class
     
-    def add_customLabelCol(self, df):
+    def __add_customLabelCol(self, df):
         """
-        This function adds a new column 'Name' to the input DataFrame 'df' based on the custom labels 
+        This method adds a new column 'Name' to the input DataFrame 'df' based on the custom labels 
         from the BERTopic model 'bertopic_model'. The new column 'Name' is mapped from the 'Topic' 
         column of the DataFrame using the custom labels.
 
