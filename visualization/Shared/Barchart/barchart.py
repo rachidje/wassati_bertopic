@@ -5,9 +5,17 @@ import pandas as pd
 
 class Barchart:
 
-    def plot_emotion(self,emotion, class_name, time_period= None, use_percentage= False, random_colors= True, set_colors= ['#96ceb4', '#87bdd8', '#ffcc5c', '#ff6f69', '#f4a688', '#d96459'], set_color= None):
+    def plot_emotion(self,
+                     emotion, 
+                     class_name, 
+                     time_period= None, 
+                     use_percentage= False, 
+                     random_colors= True, 
+                     set_colors= ['#96ceb4', '#87bdd8', '#ffcc5c', '#ff6f69', '#f4a688', '#d96459'], 
+                     set_color= None
+                     ):
         """
-        This function plots a bar chart of the distribution of a specified emotion by a specified class.
+        This method plots a bar chart of the distribution of a specified emotion by a specified class.
 
         Parameters
         ----------
@@ -69,38 +77,40 @@ class Barchart:
 
         return fig
     
-    def add_percentage(self, df, topic_col='Topic', freq_col='Frequency', include_outliers=False):
+    def add_percentage(self, df_topics_per_class, topic_col='Topic', freq_col='Frequency', include_outliers=False):
         """
         This function adds two percentage columns to a dataframe. The first percentage is calculated as the frequency of each topic within each class. The second percentage is calculated as the frequency of each class within each topic.
         
-        Parameters:
-        df (DataFrame): The input dataframe.
-        topic_col (str, optional): The name of the topic column in the dataframe. Defaults to 'Topic'.
-        freq_col (str, optional): The name of the frequency column in the dataframe. Defaults to 'Frequency'.
-        include_outliers (bool, optional): Whether to include outliers (topic number -1) in the percentage computation. Defaults to True.
+        Parameters
+        ----------
+            df (DataFrame): The input dataframe.
+            topic_col (str, optional): The name of the topic column in the dataframe. Defaults to 'Topic'.
+            freq_col (str, optional): The name of the frequency column in the dataframe. Defaults to 'Frequency'.
+            include_outliers (bool, optional): Whether to include outliers (topic number -1) in the percentage computation. Defaults to True.
 
-        Returns:
-        DataFrame: A dataframe with added 'Topic_Percentage' and 'Class_Percentage' columns.
+        Returns
+        -------
+            DataFrame: A dataframe with added 'Topic_Percentage' and 'Class_Percentage' columns.
         """ 
         # If not including outliers, remove them from the dataframe
         if not include_outliers:
-            df = df[df[topic_col] != -1]
+            df_topics_per_class = df_topics_per_class[df_topics_per_class[topic_col] != -1]
 
         # Check if columns exist in dataframe
         for col in [col for col in [topic_col, freq_col] if col is not None]:
-            if col not in df.columns:
+            if col not in df_topics_per_class.columns:
                 print(f"Warning: Column '{col}' not found in dataframe. The function will proceed with default column names.")
 
         # Calculate the total frequency per topic
-        df_total_topic = df.groupby(topic_col)[freq_col].sum().reset_index()
+        df_total_topic = df_topics_per_class.groupby(topic_col)[freq_col].sum().reset_index()
         df_total_topic.columns = [topic_col, 'Total_Topic']
 
         # Calculate the total frequency per class
-        df_total_class = df.groupby("Class")[freq_col].sum().reset_index()
+        df_total_class = df_topics_per_class.groupby("Class")[freq_col].sum().reset_index()
         df_total_class.columns = ["Class", 'Total_Class']
 
         # Merge these two dataframes with original dataframe
-        df_merged = pd.merge(df, df_total_topic, on=topic_col)
+        df_merged = pd.merge(df_topics_per_class, df_total_topic, on=topic_col)
         df_merged = pd.merge(df_merged, df_total_class, on="Class")
 
         # Calculate the percentages and round to 2 decimal places
@@ -116,14 +126,14 @@ class Barchart:
 
         return df_merged
     
-    def save_graph_html(self, path, name):
+    def save_graph_html(self, path, filename):
         """
         Saves a Plotly figure as an HTML file at the specified path.
 
         Parameters
         ----------
             path (str): The directory where the HTML file will be saved.
-            name (str): The name of the HTML file (without the .html extension).
+            filename (str): The filename of the HTML file (without the .html extension).
 
         Returns
         -------
@@ -133,5 +143,5 @@ class Barchart:
         if not os.path.exists(path):
             os.makedirs(path)
             
-        return self.fig.write_html(f"{path}/{name}.html")
+        return self.fig.write_html(f"{path}/{filename}.html")
     

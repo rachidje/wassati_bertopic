@@ -9,7 +9,18 @@ class BertopicBarchart(Barchart):
     def __init__(self, bertopic_model) -> None:
         self.bertopic_model = bertopic_model
 
-    def create_chart_per_class(self, df, classes_column, filter_value=None, sortedBy=None, ascending=True, orient="h", viz_from_source=False,stacked=False, percentage_by=None,**kwargs):
+    def create_chart_per_class(self, 
+                               df, 
+                               classes_column, 
+                               filter_value=None, 
+                               sortedBy=None, 
+                               ascending=True, 
+                               orient="h", 
+                               viz_from_source=False,
+                               stacked=False, 
+                               percentage_by=None,
+                               **kwargs
+                               ):
         """
         Create a chart representing the topics per class.
 
@@ -33,7 +44,20 @@ class BertopicBarchart(Barchart):
 
         return self.fig
     
-    def __visualize_topics_per_class_orient(self, bertopic_model,topics_per_class: pd.DataFrame,top_n_topics: Union[int,None] = None,topics: List[int] = None,normalize_frequency: bool = False,percentage_by: Union[str,None] = None,custom_labels: Union[bool, str] = False,title: str = "<b>Topics per Class</b>",width: int = 1250,height: int = 900,orient: str = "h", stacked: bool = False) -> go.Figure:
+    def __visualize_topics_per_class_orient(self, 
+                                            bertopic_model,
+                                            topics_per_class: pd.DataFrame,
+                                            top_n_topics: Union[int,None] = None,
+                                            topics: List[int] = None,
+                                            normalize_frequency: bool = False,
+                                            percentage_by: Union[str,None] = None,
+                                            custom_labels: Union[bool, str] = False,
+                                            title: str = "<b>Topics per Class</b>",
+                                            width: int = 1250,
+                                            height: int = 900,
+                                            orient: str = "h", 
+                                            stacked: bool = False
+                                            ) -> go.Figure:
         """
         Visualizes the distribution of topics per class.
 
@@ -148,13 +172,18 @@ class BertopicBarchart(Barchart):
         )
         return fig
 
-    def __visualize_topics_per_class_options(self, topics_per_class, orient="h", percentage_by=None, viz_from_source=False, stacked=False, **kwargs):
+    def __visualize_topics_per_class_options(self, 
+                                             topics_per_class, 
+                                             orient="h", 
+                                             percentage_by=None, 
+                                             viz_from_source=False, 
+                                             stacked=False, 
+                                             **kwargs):
         """
         Visualizes the distribution of topics per class with additional options for orientation and percentage usage.
 
         Parameters
         ----------
-            bertopic_model : The trained BERTopic model.
             topics_per_class : A DataFrame containing the topics per class.
             orient (str, optional): The orientation of the plot. Defaults to "h".
             use_percentage (bool, optional): Whether to use percentage for the representation of the data. Defaults to False.
@@ -177,14 +206,19 @@ class BertopicBarchart(Barchart):
 
         return fig
 
-    def __create_topics_per_class_df(self, df, classes_column, filter_value=None, sortedBy=None, ascending=True):
+    def __create_topics_per_class_df(self, 
+                                     df, 
+                                     classes_column, 
+                                     filter_value=None, 
+                                     sortedBy=None, 
+                                     ascending=True
+                                     ) -> pd.DataFrame:
         """
         Computes the distribution of topics per class in the given DataFrame. Optionally filters the data by a given subclass and sorts the resulting DataFrame.
 
         Parameters
         ----------
             df (pandas.DataFrame): The input DataFrame.
-            bertopic_model (BERTopic): The BERTopic model used to compute the topics.
             classes_column (str): The name of the column in df that contains the class values.
             filter_value (str, optional): The value of the subclass to filter the data by. Required if filter is True.
             sortedBy (str, optional): Column name to sort by. Must be either None (default), 'Frequency', 'Class', 'Topic_Percentage' or 'Class_Percentage'.
@@ -237,7 +271,7 @@ class BertopicBarchart(Barchart):
         
         return topics_per_class
     
-    def __add_customLabelCol(self, df):
+    def __add_customLabelCol(self, df) -> pd.DataFrame:
         """
         This method adds a new column 'Name' to the input DataFrame 'df' based on the custom labels 
         from the BERTopic model 'bertopic_model'. The new column 'Name' is mapped from the 'Topic' 
