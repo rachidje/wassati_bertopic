@@ -21,7 +21,7 @@ class BertopicWordcloud(WordcloudMaker):
         self.bertopic_model = bertopic_model
         self.docs = docs
 
-    def recalculate_probabilities(self, lemma_prob, docs):
+    def __recalculate_probabilities(self, lemma_prob, docs):
         """
         Recalculate the c-TF-IDF scores for the lemmas.
 
@@ -74,7 +74,7 @@ class BertopicWordcloud(WordcloudMaker):
         
         return new_lemma_prob
 
-    def get_topic_words(self, topic, top_n=10):
+    def __get_topic_words(self, topic, top_n=10):
         """
         Get the top n words for a given topic.
 
@@ -108,7 +108,7 @@ class BertopicWordcloud(WordcloudMaker):
         # Return the words and their probabilities as a list of tuples
         return list(zip(words, probabilities))
 
-    def group_docs_by_topic(self):
+    def __group_docs_by_topic(self):
         """
         Group documents by their assigned topic.
 
@@ -146,19 +146,19 @@ class BertopicWordcloud(WordcloudMaker):
             dict: A dictionary where the keys are the words/lemmas (str) and the values are their probabilities (float).
         """
         # Get the topic words and their probabilities
-        topic_words = self.get_topic_words(topic, top_n=top_n)
+        topic_words = self.__get_topic_words(topic, top_n=top_n)
         # Scale the probabilities
         topic_words = [(word, prob ** scale) for word, prob in topic_words]
 
         if lemmatize:
             # Group documents by their assigned topic.
-            docs_by_topic = self.group_docs_by_topic()
+            docs_by_topic = self.__group_docs_by_topic()
             # get the documents assigned to a specific topic
             my_docs = docs_by_topic.get(topic, [])
             # Lemmatize the words and combine their probabilities
             lemma_prob = self.lemmatize_words(topic_words)
             # Recalculate the c-TF-IDF scores for the lemmas
-            topic_words_lemma = self.recalculate_probabilities(lemma_prob, my_docs)
+            topic_words_lemma = self.__recalculate_probabilities(lemma_prob, my_docs)
             # Create a dictionary with the lemmas and their probabilities
             word_freq = {lemma: prob for lemma, prob in topic_words_lemma.items()}
         
@@ -221,3 +221,4 @@ class BertopicWordcloud(WordcloudMaker):
                 wc_pic.to_file(f'{save_path}/{topic_custom_name}.png')
 
         return wc_pics
+
