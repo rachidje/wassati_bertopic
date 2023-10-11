@@ -54,9 +54,6 @@ class Prediction:
         # Convert the predictions to a DataFrame
         prediction_results = pd.DataFrame(self.predictions)
         prediction_results.rename(columns={'label': self.predicted_column_name}, inplace=True)
-        # # Reset the indices of the DataFrames (if necessary)
-        # df.reset_index(drop=True, inplace=True)
-        # prediction_results.reset_index(drop=True, inplace=True)
         # Merge the original DataFrame with the prediction results
         df_predicted = pd.concat([predicted_df, prediction_results], axis=1)
         return df_predicted
