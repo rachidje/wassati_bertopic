@@ -153,3 +153,19 @@ class Preprocessor:
             series = series.str.replace(old_word, new_word, regex=False)
         df['processed_data'] = series
         return df
+
+    @staticmethod
+    def filter_docs(df, filter_column, filter_value):
+        """
+        Filter a dataframe based on a specified column and value.
+
+        Parameters:
+        df (pandas.DataFrame): The dataframe to filter.
+        filter_column (str): The name of the column to filter by.
+        filter_value (str): The value to filter by in the specified column.
+
+        Returns:
+        tuple: A tuple containing the filtered dataframe and a boolean mask indicating which rows match the specified filter.
+        """
+        filter_mask : Series[bool] = df[filter_column] == filter_value
+        return df[filter_mask], filter_mask

@@ -3,7 +3,7 @@ from pandas import DataFrame
 
 class BertopicTopDocs:
 
-    def __init__(self, bertopic_probabilities: ndarray, df: DataFrame, topic: int, top_n_docs: int) -> None:
+    def __init__(self, bertopic_probabilities: ndarray, df: DataFrame) -> None:
         """
         Constructor
 
@@ -11,17 +11,19 @@ class BertopicTopDocs:
         ----------
             probabilities (numpy.ndarray): The probabilities from the BERTopic model.
             df (pandas.DataFrame): The dataframe containing the documents.
-            topic (int): The topic to get the top n documents for.
-            top_n_docs (int): The number of top documents to return.
+            
         """
         self.bertopic_probabilities = bertopic_probabilities
         self.df = df.copy()
-        self.topic = topic
-        self.top_n_docs = top_n_docs
 
-    def get_top_topic_docs(self) -> tuple:
+    def get_top_topic_docs(self, topic: int, top_n_docs: int) -> tuple:
         """
         Get the top n documents for a specified topic.
+
+        Parameters
+        ----------
+            topic (int): The topic to get the top n documents for.
+            top_n_docs (int): The number of top documents to return.
         
         Returns
         -------
@@ -30,7 +32,7 @@ class BertopicTopDocs:
         
         
         # Get the unique probabilities for the defined topic
-        unique_probs = unique(self.bertopic_probabilities[:, self.topic])
+        unique_probs = unique(self.bertopic_probabilities[:, topic])
         # Sort the unique probabilities in descending order
         sorted_unique_probs = sort(unique_probs)[::-1]
         
@@ -40,12 +42,12 @@ class BertopicTopDocs:
         # Loop over the unique probabilities
         for prob in sorted_unique_probs:
             # Sort the documents that have the current probability for the defined topic
-            sorted_top_docs_indices = BertopicTopDocs.sort_docs_with_same_prob(self.bertopic_probabilities, prob, self.topic)
+            sorted_top_docs_indices = BertopicTopDocs.sort_docs_with_same_prob(self.bertopic_probabilities, prob, topic)
             # Append these indices to the list of sorted indices of all documents
             sorted_docs_indices.extend(sorted_top_docs_indices)
         
         # Take the top n from this sorted list
-        final_top_docs_indices = array(sorted_docs_indices)[:self.top_n_docs]
+        final_top_docs_indices = array(sorted_docs_indices)[:top_n_docs]
         
         # Get the content of the top n documents from your dataframe
         top_docs_df = self.df.iloc[final_top_docs_indices]
