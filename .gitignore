@@ -3,4 +3,4 @@ models/
 notebooks_rachid/
 notebooks_martin/
 credentials.yaml
-**/__pycache__/
+__pycache__/
