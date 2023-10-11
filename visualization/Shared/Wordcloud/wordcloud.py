@@ -62,6 +62,8 @@ class WordcloudMaker:
         
         return lemma_prob
     
+    def get_word_freq(self, topic, top_n= 10, scale= 1, lemmatize= False) -> dict: ...
+    
     def create_wordcloud(self, topic, top_n=10, scale=1, lemmatize=False, stopwords=None, wordcloud_kwargs=None):
         """
         Create a word cloud from a BERTopic model and a topic.
@@ -90,7 +92,7 @@ class WordcloudMaker:
 
         # Remove stopwords from word_freq if provided
         if stopwords:
-            word_freq = {word: freq for word, freq in word_freq.items() if word not in stopwords}
+            word_freq= {word: freq for word, freq in word_freq.items() if word not in stopwords}
         
         # Create the word cloud using the words/lemmas and their probabilities
         wc = WordCloud(**(wordcloud_kwargs or {}))

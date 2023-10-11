@@ -1,5 +1,6 @@
 import nltk
 import numpy as np
+from typing import List, Tuple, Dict
 
 from visualization.Shared.Wordcloud.wordcloud import WordcloudMaker
 
@@ -21,7 +22,7 @@ class BertopicWordcloud(WordcloudMaker):
         self.bertopic_model = bertopic_model
         self.docs = docs
 
-    def __recalculate_probabilities(self, lemma_prob, docs):
+    def __recalculate_probabilities(self, lemma_prob, docs) -> Dict[str, float]:
         """
         Recalculate the c-TF-IDF scores for the lemmas.
 
@@ -74,7 +75,7 @@ class BertopicWordcloud(WordcloudMaker):
         
         return new_lemma_prob
 
-    def __get_topic_words(self, topic, top_n=10):
+    def __get_topic_words(self, topic, top_n=10) -> List[Tuple]:
         """
         Get the top n words for a given topic.
 
@@ -108,7 +109,7 @@ class BertopicWordcloud(WordcloudMaker):
         # Return the words and their probabilities as a list of tuples
         return list(zip(words, probabilities))
 
-    def __group_docs_by_topic(self):
+    def __group_docs_by_topic(self) -> dict:
         """
         Group documents by their assigned topic.
 
@@ -126,7 +127,7 @@ class BertopicWordcloud(WordcloudMaker):
         
         return docs_by_topic 
 
-    def get_word_freq(self, topic, top_n= 10, scale= 1, lemmatize= False):
+    def get_word_freq(self, topic, top_n= 10, scale= 1, lemmatize= False) -> dict:
         """
         Get the word frequencies for a given topic.
 
@@ -175,7 +176,7 @@ class BertopicWordcloud(WordcloudMaker):
                                    stopwords= None, 
                                    wordcloud_kwargs= None, 
                                    to_save= False, 
-                                   save_path= None):
+                                   save_path= None) -> dict:
         """
         Create word clouds for all topics in a BERTopic model.
 
