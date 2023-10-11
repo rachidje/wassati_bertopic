@@ -68,15 +68,15 @@ def main():
     col1, col2 = st.columns([1,1.7])
     with col1:
         st.markdown("<h3 style='text-align: center; color: black;'>Many very precise topics</h3>", unsafe_allow_html=True)
-        print_graph_html('data/graphs/topic_visualize_topics.html', height=750)
+        print_graph_html('data/graphs/Clustering/global/topic_visualize_topics.html', height=750)
     with col2:
         st.markdown("<h3 style='text-align: center; color: black;'>The biggest 12 topics keywords</h3>", unsafe_allow_html=True)
-        print_graph_html('data/graphs/topics_barchart_viz.html', height=750)
+        print_graph_html('data/graphs/Clustering/global/top_12_topics_barchart_viz.html', height=750)
     
     
     st.subheader('''Topics hierarchy''')
     st.write("""Let's ordered all those topics hierarchicaly\n\n""")
-    print_graph_html('data/graphs/topic_hierarchy.html', height=1050)
+    print_graph_html('data/graphs/Clustering/hierarchy/topics_hierarchy.html', height=1050)
     
     
     st.subheader('Aggregated Topics')
@@ -98,7 +98,7 @@ def main():
     
     st.subheader('''Vizualize documents per aggregated topic''')
     st.write("""Let's regroup the many subtopics into the aggregated topics\n\n""")
-    print_graph_html('data/graphs/topic_merged_visualize_reduced_docs.html', height=750)
+    print_graph_html('data/graphs/Clustering/documents_viz/topic_merged_visualize_reduced_docs.html', height=750)
     
     
     st.subheader('''Wordcloud''')
@@ -117,7 +117,7 @@ def main():
     
     st.subheader('''Topic Evolution''')
     st.write("""Let's check the topics evolution in time (by months)\n\n""")
-    print_graph_html('data/graphs/topic_merged_topics_over_time_months.html', height=500)
+    print_graph_html('data/graphs/Clustering/topic_in_time/topic_merged_time_by_months.html', height=500)
     
     
     st.subheader('''Heatmaps Graphics''')
@@ -126,10 +126,10 @@ def main():
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("<h4 style='text-align: center; color: grey;'>The global topics relations</h4>", unsafe_allow_html=True)
-        print_graph_html('data/graphs/topic_merged_heatmap.html', height=750)
+        print_graph_html('data/graphs/Clustering/heatmap/topic_merged_heatmap.html', height=750)
     with col2:
         st.markdown("<h4 style='text-align: center; color: grey;'>The sub-topics relations</h4>", unsafe_allow_html=True)
-        print_graph_html('data/graphs/topic_heatmap.html', height=750)
+        print_graph_html('data/graphs/Clustering/heatmap/topic_heatmap.html', height=750)
     
     
     st.subheader("Topic Repartition")
@@ -137,7 +137,7 @@ def main():
     # Giving user options for selecting the class repartition
     groupby_option = st.selectbox('Select group : by which class do you want to see the topic repartition?',groupby_options)
     # Produces topic_per_class barchart
-    print_graph_html(f'data/graphs/topics_per_class/topic_model_merged/{shorter_names[groupby_option]}.html', height=750)
+    print_graph_html(f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}.html', height=750)
     
     
     st.header("Sentiment Analysis")
