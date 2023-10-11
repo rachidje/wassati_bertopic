@@ -20,16 +20,13 @@ class Preprocessor:
         """
         Initialize the preprocessor with the necessary parameters.
 
-        :param data_loader: A list of countries for which to update the translation columns.
-        :type data_loader: list of str
-        :param text_data_column: A list of column names to filter and/or join. Could be a unique string column name also.
-        :type text_data_column: list of str, or a unique string
-        :param words_to_filter: An optional list of words to filter. Defaults to None.
-        :type words_to_filter: list of str, optional
-        :param replacements: An optional dictionary mapping old words to new words for replacement. Defaults to None.
-        :type replacements: dict, optional
-        :param sep: An optional separator string to use between values when joining columns. Defaults to '. '.
-        :type sep: str, optional
+        Parameters
+        ----------
+            data_loader (List[str]): A list of countries for which to update the translation columns.
+            text_data_column (List[str] | str): A list of column names to filter and/or join. Could be a unique string column name also.
+            words_to_filter (List[str]): An optional list of words to filter. Defaults to None.
+            replacements (Dict[str,str]): An optional dictionary mapping old words to new words for replacement. Defaults to None.
+            sep (str): An optional separator string to use between values when joining columns. Defaults to '. '.
         """
         self.data_loader = data_loader
         self.text_data_column = text_data_column if isinstance(text_data_column, list) else [text_data_column]
@@ -43,14 +40,15 @@ class Preprocessor:
 
         This method takes a DataFrame of data and optional filter_rows, and replace_words arguments as input. It adds additional columns to the DataFrame, renames some columns for readability, updates the translation columns for specific rows, and optionally filters rows and joins columns. If replace_words is True, it also replaces words in the joined column using the specified replacements. The modified DataFrame is then returned.
 
-        :param df: A DataFrame of input data.
-        :type df: pandas.DataFrame
-        :param filter_rows: An optional boolean specifying whether or not to filter rows by removing rows where any of the specified columns contains only punctuation marks or only one or more occurrences of the specified words. Defaults to True.
-        :type filter_rows: bool, optional
-        :param replace_words: An optional boolean specifying whether or not to replace words in the joined column using the specified replacements. Defaults to True.
-        :type replace_words: bool, optional
-        :return: A modified DataFrame with additional columns, renamed columns, updated translation columns, and optionally filtered and joined rows and replaced words.
-        :rtype: pandas.DataFrame
+        Parameters
+        ----------
+            df (DataFrame): A DataFrame of input data.
+            filter_rows (bool): An optional boolean specifying whether or not to filter rows by removing rows where any of the specified columns contains only punctuation marks or only one or more occurrences of the specified words. Defaults to True.
+            replace_words (bool): An optional boolean specifying whether or not to replace words in the joined column using the specified replacements. Defaults to True.
+
+        Returns
+        -------
+            A modified DataFrame with additional columns, renamed columns, updated translation columns, and optionally filtered and joined rows and replaced words.
         """
 
         # Ensure that replacements is provided if replace_words is used
@@ -59,7 +57,6 @@ class Preprocessor:
                 "replacements must be provided if replace_words is used")
 
         # Add some additional info as columns
-        ################
         self.preprocessed_df : DataFrame = self.data_loader.process()
         self.preprocessed_df['processed_data'] = self.preprocessed_df[self.text_data_column[0]].str.lower()
 
@@ -81,10 +78,15 @@ class Preprocessor:
 
         This method takes a DataFrame as input and returns a new DataFrame containing only the rows where the specified column does not contain only punctuation marks or only one or more occurrences of the specified words.
 
-        :param df: A DataFrame to filter.
-        :type df: pandas.DataFrame
-        :return: A DataFrame containing only the rows where the specified column does not contain only punctuation marks or only one or more occurrences of the specified words.
-        :rtype: pandas.DataFrame
+        Parameters
+        ----------
+            df: A DataFrame to filter.
+            text_data_column (List[str] | str): A list of column names to filter and/or join. Could be a unique string column name also.
+            words_to_filter (List[str]): An optional list of words to filter. Defaults to None.
+
+        Returns
+        -------
+            A DataFrame containing only the rows where the specified column does not contain only punctuation marks or only one or more occurrences of the specified words.
         """
         # Create a regular expression pattern to match values that contain only punctuation marks or only one or more occurrences of the specified words, possibly mixed with punctuation marks
         pattern = r'^\s*[\W\s]*\s*$|^\s*(\W*\b(' + '|'.join(re.escape(word) for word in words_to_filter) + r')\b\W*)+\s*$'
@@ -111,10 +113,15 @@ class Preprocessor:
 
         This method takes a DataFrame as input and returns a new DataFrame where the content from the specified columns has been joined using a separator and stored in a new column.
 
-        :param df: A DataFrame to join.
-        :type df: pandas.DataFrame
-        :return: A DataFrame where the content from the specified columns has been joined using a separator and stored in a new column.
-        :rtype: pandas.DataFrame
+        Parameters
+        ----------
+            df: A DataFrame to join.
+            text_data_column (List[str] | str): A list of column names to filter and/or join. Could be a unique string column name also.
+            sep (str): separator string to use between values when joining columns.
+
+        Returns
+        -------
+            A DataFrame where the content from the specified columns has been joined using a separator and stored in a new column.
         """
         # Define a custom function to join the content from the specified columns using a separator
         def join_column(row):
@@ -135,16 +142,20 @@ class Preprocessor:
         return df[df['processed_data'].str.len() > 0]
 
     @staticmethod
-    def replace_words(df: DataFrame, replacements: Dict[str, str]):
+    def replace_words(df: DataFrame, replacements: Dict[str, str]) -> DataFrame:
         """
         Replace words in a DataFrame column using specified replacements.
 
         This method takes a DataFrame as input and returns a new DataFrame where words in the specified column have been replaced using the specified replacements.
 
-        :param df: A DataFrame to replace words in.
-        :type df: pandas.DataFrame
-        :return: A DataFrame where words in the specified column have been replaced using the specified replacements.
-        :rtype: pandas.DataFrame
+        Parameters
+        ----------
+            df (DataFrame): A DataFrame to replace words in.
+            replacements (Dict[str,str]): An optional dictionary mapping old words to new words for replacement. Defaults to None.
+            
+        Returns
+        -------
+        A DataFrame where words in the specified column have been replaced using the specified replacements.
         """
         series = df['processed_data']
         # Iterate over the word replacements
@@ -159,13 +170,61 @@ class Preprocessor:
         """
         Filter a dataframe based on a specified column and value.
 
-        Parameters:
-        df (pandas.DataFrame): The dataframe to filter.
-        filter_column (str): The name of the column to filter by.
-        filter_value (str): The value to filter by in the specified column.
+        Parameters
+        ----------
+            df (pandas.DataFrame): The dataframe to filter.
+            filter_column (str): The name of the column to filter by.
+            filter_value (str): The value to filter by in the specified column.
 
-        Returns:
-        tuple: A tuple containing the filtered dataframe and a boolean mask indicating which rows match the specified filter.
+        Returns
+        -------
+            tuple: A tuple containing the filtered dataframe and a boolean mask indicating which rows match the specified filter.
         """
         filter_mask : Series[bool] = df[filter_column] == filter_value
         return df[filter_mask], filter_mask
+    
+    @staticmethod
+    def convert_dict(input_dict: dict, conversion_type='keys_to_values') -> Dict[str, List[str]]:
+        """
+        This static method converts between a key-to-value dictionary and a value-to-keys dictionary.
+
+        Parameters
+        ----------
+            input_dict (dict): The input dictionary. If conversion_type is 'keys_to_values', this should be a dictionary where the keys are the original keys and the values are the corresponding values. If conversion_type is 'values_to_keys', this should be a dictionary where the keys are the original values and the values are lists of keys for each value.
+            conversion_type (str): The type of conversion to perform. Can be either 'keys_to_values' or 'values_to_keys'.
+
+        Returns
+        -------
+            dict: The converted dictionary. If conversion_type is 'keys_to_values', this will be a dictionary where the keys are the original values and the values are lists of keys for each value. If conversion_type is 'values_to_keys', this will be a dictionary where the keys are the original keys and the values are the corresponding values.
+        """
+        if conversion_type == 'keys_to_values':
+            output_dict = {}
+            for key, value in input_dict.items():
+                if value not in output_dict:
+                    output_dict[value] = []
+                output_dict[value].append(key)
+        elif conversion_type == 'values_to_keys':
+            output_dict = {key: value for value, keys in input_dict.items() for key in keys}
+        else:
+            raise ValueError("Invalid conversion_type. Must be either 'keys_to_values' or 'values_to_keys'.")
+        
+        return output_dict
+
+    @staticmethod
+    def add_grouping_column(df: DataFrame, key_column: str, group_dict: Dict[str, List[str]], group_column_name) -> DataFrame:
+        """
+        This static method adds a new column to a DataFrame with the group name of each key.
+
+        Parameters
+        ----------
+            df (pd.DataFrame): The original DataFrame.
+            key_column (str): The name of the column in df that contains the keys.
+            group_dict (dict): A dictionary where the keys are the original keys and the values are the corresponding group names.
+            group_column_name (str): The name of the new column to be added to df for the groups.
+
+        Returns
+        -------
+            DataFrame: The original DataFrame with an added column for the groups.
+        """
+        df[group_column_name] = df[key_column].map(group_dict)
+        return df
