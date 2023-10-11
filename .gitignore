@@ -1,5 +1,6 @@
 data/
 models/
-notebooks_rachid
-notebooks_martin
+notebooks_rachid/
+notebooks_martin/
 credentials.yaml
+**/__pycache__/
