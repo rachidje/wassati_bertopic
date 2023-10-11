@@ -1,8 +1,10 @@
 import copy
-from pandas import DataFrame
-from sentence_transformers import SentenceTransformer
-from bertopic import BERTopic
 import pickle
+
+from pandas import DataFrame
+from bertopic import BERTopic
+from sentence_transformers import SentenceTransformer
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
 
 import torch
 
@@ -112,3 +114,22 @@ class ClusteringMethod:
         topic_model_merged.set_topic_labels(mergedtopic_labels_dict)
 
         return topic_model_merged
+
+    @staticmethod
+    def load_model_huggingface(model_name, task, problem_type=None, **kwargs):
+        """
+        This function loads a model and tokenizer from a given model name, then creates a pipeline to perform a specified task.
+
+        Args:
+            model_name (str): The name of the model to load.
+            task (str): The type of task to perform with the pipeline.
+            problem_type (str): The type of problem to solve ("multi_label_classification" for multi-label tasks).
+            **kwargs: Additional arguments to pass to the pipeline.
+
+        Returns:
+            pipeline: A pipeline configured to perform the specified task with the loaded model and tokenizer.
+        """
+        model = AutoModelForSequenceClassification.from_pretrained(model_name, problem_type=problem_type)
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        classifier = pipeline(task, model=model, tokenizer=tokenizer, **kwargs)
+        return classifier
