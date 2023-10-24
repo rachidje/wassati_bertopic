@@ -1,7 +1,6 @@
 from bertopic.vectorizers import ClassTfidfTransformer
 from bertopic.representation import KeyBERTInspired, MaximalMarginalRelevance
 
-
 # Define a dictionary of words replacements
 
 replacements = {' se ': ' schneider electric ',

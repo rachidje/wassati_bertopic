@@ -24,6 +24,8 @@ preprocessing = Preprocessor(
 )
 
 df_preprocessed = preprocessing.preprocess()
+# Filter out rows with empty comments
+df_preprocessed = df_preprocessed[df_preprocessed['processed_data'].notna()]
 
 vocabulary_creator = VocabularyCreator(
     model_name,

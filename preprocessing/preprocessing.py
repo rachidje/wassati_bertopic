@@ -1,5 +1,6 @@
 import re
 import string
+import pandas as pd
 from typing import List, Union, Dict
 
 from pandas import DataFrame, notnull, Series
@@ -60,6 +61,9 @@ class Preprocessor:
         self.preprocessed_df : DataFrame = self.data_loader.process()
         self.preprocessed_df['processed_data'] = self.preprocessed_df[self.text_data_column[0]].str.lower()
 
+        # Save the rows with empty comments in a separate DataFrame
+        empty_comments_df = self.preprocessed_df[self.preprocessed_df['processed_data'].isna()]
+
         if filter_rows:
             self.preprocessed_df = self.filter_rows(self.preprocessed_df, self.text_data_column, self.words_to_filter)
 
@@ -68,6 +72,10 @@ class Preprocessor:
 
         if replace_words:
             self.preprocessed_df = self.replace_words(self.preprocessed_df, self.replacements)
+
+
+        # Append the rows with empty comments back to df_labelled
+        self.preprocessed_df = pd.concat([self.preprocessed_df, empty_comments_df])
 
         return self.preprocessed_df
 
