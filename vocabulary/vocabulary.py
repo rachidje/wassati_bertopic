@@ -8,7 +8,8 @@ class VocabularyCreator:
     """
     A class to create a custom vocabulary from a list of documents using KeyBERT.
     """
-    def __init__(self, ngrams_list: Union[List[str], None] = None, model_name: str ="all-MiniLM-L6-v2", **keybert_kwargs):
+
+    def __init__(self, model_name: str, ngrams_list: Union[List[str], None] = None, **keybert_kwargs):
         """
         Initialize the vocabulary creator with the necessary parameters.
 

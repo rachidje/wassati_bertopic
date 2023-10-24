@@ -1,7 +1,7 @@
 from pandas import read_csv
 
-from utils import countries_to_update, text_data_column, words_to_filter, replacements, ngrams_list, keybert_kwargs, bertopic_kwargs, more_stopwords, labels
-from preprocessing.abstract.AbstractDataLoader import SchneiderDataLoader
+from utils.schneider import countries_to_update, text_data_column, words_to_filter, replacements, ngrams_list, keybert_kwargs, bertopic_kwargs, more_stopwords
+from preprocessing.dataLoaders.schneider_data_loader import SchneiderDataLoader
 from preprocessing.preprocessing import Preprocessor
 from vocabulary.vocabulary import VocabularyCreator
 from clustering.clustering import ClusteringMethod
@@ -12,7 +12,9 @@ nltk.download('stopwords')
 stopwords = nltk.corpus.stopwords.words('english')
 stopwords.extend(more_stopwords)
 
-df = read_csv("data/csv_files/schneider.csv")
+model_name = "all-MiniLM-L6-v2"
+
+df = read_csv("data/schneider.csv")
 schneiderDataLoader = SchneiderDataLoader(df, countries_to_update)
 preprocessing = Preprocessor(
     schneiderDataLoader, 
@@ -24,13 +26,15 @@ preprocessing = Preprocessor(
 df_preprocessed = preprocessing.preprocess()
 
 vocabulary_creator = VocabularyCreator(
+    model_name,
     ngrams_list,
     **keybert_kwargs
 )
 vocabulary_list = vocabulary_creator.keybert_vocabulary(df_preprocessed)
+print(len(vocabulary_list))
 
 # On lance BERTopic avec ou sans vocabulary
-clustering = ClusteringMethod()
+clustering = ClusteringMethod(model_name)
 bertopic_kwargs['vectorizer_model'] = CountVectorizer(
                     vocabulary=vocabulary_list, 
                     stop_words=stopwords, 
@@ -44,4 +48,4 @@ topics, probs, topic_model, embeddings = clustering.run_bertopic(
     **bertopic_kwargs
     )
 
-clustering.save('models/model')
+# clustering.save('models/model')
