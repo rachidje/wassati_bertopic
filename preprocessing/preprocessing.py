@@ -147,7 +147,7 @@ class Preprocessor:
         # Update 'non_empty_rows' for rows where 'processed_data' is an empty string
         df.loc[df['processed_data'].str.len() == 0, 'non_empty_rows'] = False
 
-        return df[df['processed_data'].str.len() > 0]
+        return df
 
     @staticmethod
     def replace_words(df: DataFrame, replacements: Dict[str, str]) -> DataFrame:
