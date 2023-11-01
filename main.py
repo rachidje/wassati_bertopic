@@ -23,9 +23,9 @@ preprocessing = Preprocessor(
     replacements
 )
 
-df_preprocessed = preprocessing.preprocess()
-# Filter out rows with empty comments
-df_preprocessed = df_preprocessed[df_preprocessed['processed_data'].notna()]
+df_preprocessed_full = preprocessing.preprocess()
+# Filter rows based on 'non_empty_rows' column
+df_preprocessed = df_preprocessed_full[df_preprocessed_full['non_empty_rows']]
 
 vocabulary_creator = VocabularyCreator(
     model_name,
