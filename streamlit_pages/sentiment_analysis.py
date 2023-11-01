@@ -4,8 +4,26 @@ from streamlit_utils import *
 def app():
     st.header("Sentiment Analysis")
     st.write("""
-            Sentiment analysis is a technique used to determine the emotional tone behind a piece of text. It can be used to identify whether the text expresses a positive, neutral, or negative sentiment. Emotion analysis goes deeper and can identify specific emotions such as approval, disappointment, anger, and more. This can be useful for understanding how people feel about a particular topic or product. Sentiment analysis is a complex field that involves natural language processing and machine learning techniques, but the results can provide valuable insights into the emotions expressed in text.\n\n
-            """)
+    Welcome to the Sentiment Analysis section of the dashboard. This section is designed to delve into the sentiments and emotions expressed in the comments.""")
+
+    st.info("""
+    **What is 'Sentiment Analysis'?**
+    
+    Sentiment analysis is a technique used to determine the emotional tone behind a piece of text. It can be used to identify whether the text expresses a positive, neutral, or negative sentiment. Emotion analysis goes deeper and can identify specific emotions such as approval, disappointment, anger, and more.
+    
+    This can be useful for understanding how people feel about a particular topic or product. Sentiment analysis is a complex field that involves natural language processing and machine learning techniques, but the results can provide valuable insights into the emotions expressed in text.\n\n
+    """)
+
+    st.write("""
+    Here, you'll find visualizations such as:
+
+    1. **Count Frequency Charts**: These charts show the total number of comments for each sentiment or emotion. They give an idea of the overall emotional tone of the feedback.
+
+    2. **Topic-wise Percentage Bar Charts**: These charts show what portion of comments each sentiment or emotion represents within each topic. It's like asking, "Out of all the comments about topic A, what percentage were positive?" This type of chart is useful for understanding how sentiments vary across different topics.
+
+    3. **Class-wise Percentage Bar Charts**: These charts show how much each class (year, zone, etc.) contributes to a particular sentiment or emotion. It's like asking, "What percentage of positive comments were made in 2023?" This can help us understand which sentiments are most prevalent in each class.
+
+    4. **Deep Dive into Specific Emotions**: These visualizations allow for a deeper analysis of specific emotions, showing how they vary across different topics and classes.""")
 
     
     st.subheader('Sentiments and Emotions Repartition By Topic')
