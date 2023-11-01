@@ -23,7 +23,8 @@ preprocessing = Preprocessor(
     replacements
 )
 
-df_preprocessed = preprocessing.preprocess()
+df_full = preprocessing.preprocess()
+df_preprocessed = df_full[df_full['non_empty_rows'] == True]
 
 vocabulary_creator = VocabularyCreator(
     model_name,

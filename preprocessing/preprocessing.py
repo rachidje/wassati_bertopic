@@ -60,6 +60,9 @@ class Preprocessor:
         self.preprocessed_df : DataFrame = self.data_loader.process()
         self.preprocessed_df['processed_data'] = self.preprocessed_df[self.text_data_column[0]].str.lower()
 
+        # Initialize 'non_empty_rows' column
+        self.preprocessed_df['non_empty_rows'] = True
+
         if filter_rows:
             self.preprocessed_df = self.filter_rows(self.preprocessed_df, self.text_data_column, self.words_to_filter)
 
@@ -88,12 +91,13 @@ class Preprocessor:
         -------
             A DataFrame containing only the rows where the specified column does not contain only punctuation marks or only one or more occurrences of the specified words.
         """
+        new_df = df.copy()
+
         # Create a regular expression pattern to match values that contain only punctuation marks or only one or more occurrences of the specified words, possibly mixed with punctuation marks
         pattern = r'^\s*[\W\s]*\s*$|^\s*(\W*\b(' + '|'.join(re.escape(word) for word in words_to_filter) + r')\b\W*)+\s*$'
 
         # Define a custom function to filter rows where the specified column contains only punctuation marks or only one or more occurrences of the specified words, possibly mixed with punctuation marks. It filters also the non-ASCII characters
-        pattern = r'^\s*[\W\s]*\s*$|^\s*(\W*\b(' + '|'.join(re.escape(word) for word in words_to_filter) + r')\b\W*)+\s*$'
-        def filter_row(row):
+        def check_row(row):
             for col in text_data_column:
                 value = row[col]
                 if notnull(value):
@@ -102,9 +106,10 @@ class Preprocessor:
                         return False
             return True
         
-        filtered_df = df[df.apply(filter_row, axis=1)]
+        # Apply the custom function to each row and store the results in 'non_empty_rows' column
+        new_df['non_empty_rows'] = new_df.apply(check_row, axis=1)
 
-        return filtered_df
+        return new_df
 
     @staticmethod
     def join_columns(df: DataFrame, text_data_column: List[str], sep: str):
@@ -138,6 +143,9 @@ class Preprocessor:
 
         # Join the content from the specified columns using the custom join_columns function
         df['processed_data'] = df.apply(join_column, axis=1)
+
+        # Update 'non_empty_rows' for rows where 'processed_data' is an empty string
+        df.loc[df['processed_data'].str.len() == 0, 'non_empty_rows'] = False
 
         return df[df['processed_data'].str.len() > 0]
 
