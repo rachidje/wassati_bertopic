@@ -12,7 +12,6 @@ class SunburstChart:
         self.levels = levels
         self.data_df = df.copy()
 
-
     def __filter_docs(self, filter_column: str, filter_value: Union[str, None]):
         filter_mask = self.data_df[filter_column] == filter_value
 
