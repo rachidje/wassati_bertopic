@@ -30,21 +30,40 @@ def app():
     st.write("""Let's study the global repartition by topic of the sentiments and emotions.\n\n""")
 
 
+    # col1, col2 = st.columns([1,2.3])
+    # with col1:
+    #     st.markdown("<h4 style='text-align: center; color: grey;'>By Sentiment</h4>", unsafe_allow_html=True)
+    #     # Add buttons to choose for frequency or percentage for the representation of the data 
+    #     subcol1, subcol2, subcol3, subcol4 = st.columns([1,1,1,1])
+    #     data_representation_buttons("sentiment_by_topic_global", subcol2, subcol3)
+    #     path = 'data/graphs/Sentiment_Analysis/by_sentiment/repartition_per_topic/global/model_merged_per_sentiment.html'
+    #     print_freq_pct_choice("sentiment_by_topic_global", path, height=750)
+    # with col2:
+    #     st.markdown("<h4 style='text-align: center; color: grey;'>By Emotion</h4>", unsafe_allow_html=True)
+    #     # Add buttons to choose for frequency or percentage for the representation of the data 
+    #     subcol1, subcol2, subcol3, subcol4 = st.columns([3,1,1,3])
+    #     data_representation_buttons("emotion_by_topic_global", subcol2, subcol3)
+    #     path = 'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/global/model_merged_per_emotion.html'
+    #     print_freq_pct_choice("emotion_by_topic_global", path, height=750)
+
+
     col1, col2 = st.columns([1,2.3])
     with col1:
         st.markdown("<h4 style='text-align: center; color: grey;'>By Sentiment</h4>", unsafe_allow_html=True)
         # Add buttons to choose for frequency or percentage for the representation of the data 
-        subcol1, subcol2, subcol3, subcol4 = st.columns([1,1,1,1])
-        data_representation_buttons("sentiment_by_topic_global", subcol2, subcol3)
-        path = 'data/graphs/Sentiment_Analysis/by_sentiment/repartition_per_topic/global/model_merged_per_sentiment.html'
-        print_freq_pct_choice("sentiment_by_topic_global", path, height=750)
+        subcols = st.columns([1,1,1,1])
+        data_representation_buttons("sentiment_by_topic_global", [subcols[1], subcols[2]], ['By Count', 'By Percentage'])
+        paths = ['data/graphs/Sentiment_Analysis/by_sentiment/repartition_per_topic/global/model_merged_per_sentiment.html',
+                'data/graphs/Sentiment_Analysis/by_sentiment/repartition_per_topic/global/model_merged_per_sentiment_pct.html']
+        print_choice("sentiment_by_topic_global", paths, ['By Count', 'By Percentage'], height=750)
     with col2:
         st.markdown("<h4 style='text-align: center; color: grey;'>By Emotion</h4>", unsafe_allow_html=True)
         # Add buttons to choose for frequency or percentage for the representation of the data 
-        subcol1, subcol2, subcol3, subcol4 = st.columns([3,1,1,3])
-        data_representation_buttons("emotion_by_topic_global", subcol2, subcol3)
-        path = 'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/global/model_merged_per_emotion.html'
-        print_freq_pct_choice("emotion_by_topic_global", path, height=750)
+        subcols = st.columns([3,1,1,3])
+        data_representation_buttons("emotion_by_topic_global", [subcols[1], subcols[2]], ['By Count', 'By Percentage'])
+        paths = ['data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/global/model_merged_per_emotion.html',
+                'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/global/model_merged_per_emotion_pct.html']
+        print_choice("emotion_by_topic_global", paths, ['By Count', 'By Percentage'], height=750)
 
 
     st.subheader('Single emotion repartition')
