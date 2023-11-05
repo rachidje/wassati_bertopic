@@ -41,7 +41,7 @@ def main():
                 text-align: center;
             }
             </style>
-                <div class="footer">
+            <div class="footer">
                 <p>Model constructed by <a href="https://wassati.com" >Wassati - Engaging Organizations </a></p>
             </div>
     """
