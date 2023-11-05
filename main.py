@@ -7,7 +7,7 @@ from vocabulary.vocabulary import VocabularyCreator
 from clustering.clustering import ClusteringMethod
 from sklearn.feature_extraction.text import CountVectorizer
 
-from visualization.Bertopic.Sunburst.sunburst_chart import SunburstChart
+from visualization.Shared.Sunburst.sunburst_chart import SunburstChart
 import nltk
 
 nltk.download('stopwords')
