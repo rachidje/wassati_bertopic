@@ -17,7 +17,8 @@ def app():
     3. **Hierarchy Chart**: These charts show the total number of comments for each level. They give an idea of where most of the feedback is coming from.
 
     Feel free to explore these visualizations and gain insights into your data.
-    """)
+    <br><br><br>
+    """, unsafe_allow_html=True)
 
     # Create a copy of the dictionary
     my_data_copy = copy.deepcopy(my_data)
@@ -71,21 +72,20 @@ def app():
         st.plotly_chart(fig)
         groupby_options2 = [item for item in groupby_options if item != groupby_option]
         groupby_option2 = st.selectbox(f"Select the secondary group you want to study alongside the '{groupby_option}' group for a more detailed comments completion rate analysis",groupby_options2)
-        values = st.multiselect(f"Select the specific values for the first group '{groupby_option}' you want to see the completion rate",my_data_copy[groupby_option])
+        values = st.multiselect(f"Select the specific values for the group '{groupby_option2}' you want to see the completion rate",my_data_copy[groupby_option2])
 
         # Call the function to create and print the chart
         if values:
-            fig = filling_data_barcharts(data, [groupby_option, groupby_option2], 'non_empty_rows', values_list=values, height=800, width=1300)
+            fig = filling_data_barcharts(data, [groupby_option2, groupby_option], 'non_empty_rows', values_list=values, height=800, width=1300)
             st.plotly_chart(fig)
         else:
             st.warning("Please select at least one value to see the completion rate chart.")
 
                                         ### HIERARCHY LEVELS: SUNBURST###
     with tab3:
-        st.subheader('\n\n3. Hierarchy levels for Comments')
+        st.subheader('3. Hierarchy levels for Comments')
         _, col2, _ = st.columns([1,3,1])
         with col2:
-            # print_graph('data/graphs/Descriptive_Analysis/fullfilling_rate/sunburst.html', height=800, width=800)
             fig = sunburst(data_comments_only, levels, color_sequence, unique_parent=True)
             st.plotly_chart(fig)
 

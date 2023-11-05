@@ -123,7 +123,7 @@ groupby_options = ['year', 'Zone', 'Clusters','Account Country', 'Market Segment
 # Store the parameters lists in a dictionary
 my_data = {option: (np.insert(data[option].unique().astype('object'), 0, "all_time") if option == 'year' else data[option].unique()) for option in groupby_options}
 # Add the merged_topics and emotions lists to the my_data dictionary
-my_data['merged_topics'] = data['label'].unique()
+my_data['merged_topics'] = data['label'].dropna().unique()
 my_data['emotions'] = data['single_emotion_label'].unique()
 
 shorter_names={
