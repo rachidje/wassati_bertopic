@@ -1,5 +1,5 @@
 import streamlit as st
-from streamlit_utils import *
+from utils.streamlit_utils import *
 
 def app():
     st.header("Topic Analysis")

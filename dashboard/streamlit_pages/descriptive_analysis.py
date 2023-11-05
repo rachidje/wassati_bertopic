@@ -1,5 +1,7 @@
 import streamlit as st
-from streamlit_utils import *
+from utils.streamlit_utils import *
+
+
 import copy 
 
 def app():
@@ -88,4 +90,3 @@ def app():
         with col2:
             fig = sunburst(data_comments_only, levels, color_sequence, unique_parent=True)
             st.plotly_chart(fig)
-

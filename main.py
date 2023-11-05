@@ -16,7 +16,7 @@ stopwords.extend(more_stopwords)
 
 model_name = "all-MiniLM-L6-v2"
 
-df = read_csv("data/csv_files/schneider.csv")
+df = read_csv("dashboard/data/csv_files/schneider.csv")
 schneiderDataLoader = SchneiderDataLoader(df, countries_to_update)
 preprocessing = Preprocessor(
     schneiderDataLoader, 
@@ -52,6 +52,13 @@ topics, probs, topic_model, embeddings = clustering.run_bertopic(
     )
 
 # clustering.save('models/model')
+
+df = read_csv("dashboard/data/csv_files/df_all_labelled.csv")
+# Find the additional columns in df
+additional_columns = ['allComment', 'keywords', 'label', 'predicted_labels', 'predicted_scores', 'proba_dict', 'score', 'sentiment_label', 'single_emotion_label', 'single_sentiment_from_emotion', 'topic', 'year_month']
+# Perform the merge only on these additional columns
+merged_df = df_full.merge(df[['Survey ID'] + additional_columns], on='Survey ID', how='left')
+# merged_df.to_csv("dashboard/data/csv_files/schneider_processed_labelled_full.csv", index=False)
 
 
 ### Sunburst Chart
