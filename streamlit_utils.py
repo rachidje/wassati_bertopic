@@ -7,6 +7,7 @@ import plotly.graph_objects as go
 from itertools import cycle
 import plotly.subplots as sp
 import colorsys
+import random
 
 @st.cache_data
 def load_data():
@@ -124,7 +125,7 @@ groupby_options = ['year', 'Zone', 'Clusters','Account Country', 'Market Segment
 my_data = {option: (np.insert(data[option].unique().astype('object'), 0, "all_time") if option == 'year' else data[option].unique()) for option in groupby_options}
 # Add the merged_topics and emotions lists to the my_data dictionary
 my_data['merged_topics'] = data['label'].dropna().unique()
-my_data['emotions'] = data['single_emotion_label'].unique()
+my_data['emotions'] = data['single_emotion_label'].dropna().unique()
 
 shorter_names={
     "single_emotion_label":"emotion",
@@ -521,3 +522,90 @@ def sunburst(data_df, levels, color_sequence, unique_parent=True, class_column=N
     labels, parents, values, percentages, percentages_class, normalized_percentages_class_transform, color_dict = compute_lists(data_df, levels, color_sequence, unique_parent=unique_parent, class_column=class_column, class_value=class_value)
     fig = create_sunburst_fig(labels, parents, values, percentages, percentages_class, normalized_percentages_class_transform, color_dict, class_column=class_column, class_value=class_value, **sunburst_kwargs)
     return fig
+
+
+# Plot a bar chart or histogram of the distribution of a given emotion by a specified class
+def plot_emotion(df, emotion, class_name, time_period=None, percentage_by=None, random_colors=True, set_colors=['#96ceb4', '#87bdd8', '#ffcc5c', '#ff6f69', '#f4a688', '#d96459'], set_color=None, **kwargs):
+    """
+    This function plots a bar chart of the distribution of a specified emotion by a specified class.
+
+    Parameters:
+    df (DataFrame): The input dataframe.
+    emotion (str): The emotion to filter the dataframe by.
+    class_name (str): The name of the class column in the dataframe.
+    time_period (int, optional): The time period to filter the dataframe by. Defaults to None.
+    use_percentage (bool, optional): Whether to calculate and plot percentages instead of counts. Defaults to False.
+    random_colors (bool, optional): Whether to choose a color randomly from the set_colors list. If False, set_color must be provided. Defaults to True.
+    set_colors (list of str, optional): The list of colors to choose from if random_colors is True. Defaults to ['#96ceb4', '#87bdd8', '#ffcc5c', '#ff6f69', '#f4a688', '#d96459'].
+    set_color (str, optional): The color to use for the plot if random_colors is False. Defaults to None.
+
+    Returns:
+    Figure: A Plotly figure containing the bar chart.
+    """
+    # Check that set_color is provided if random_colors is False
+    if random_colors==False and set_color is None:
+        raise ValueError("set_color must be provided if random_colors is False")
+
+    if percentage_by not in ["Topic","Class",None] :
+        raise ValueError("'percentage_by' possible values are ['Topic','Class', None]")
+    
+    
+    # Filter the data to only include rows with the specified emotion
+    filtered_data_tmp = df[df['single_emotion_label'] == emotion]
+
+    # Filter the data by the specified time period if provided
+    if time_period != None:
+        if class_name == 'year':
+            raise ValueError("class_name cannot be 'year' when time_period is defined")
+        filtered_data_tmp = filtered_data_tmp[filtered_data_tmp['year'] == time_period]
+
+    if random_colors:
+        # Randomly choose a color from the defined colors list
+        colors_list = set_colors
+        color = random.choice(colors_list)
+    else:
+        color = set_color
+
+    # Calculate the percentage if use_percentage is True
+    if percentage_by == "Topic":
+        total_emotion = len(filtered_data_tmp)
+        filtered_data = pd.DataFrame(filtered_data_tmp[class_name].value_counts() / total_emotion * 100)
+        filtered_data.columns = ['percentage']
+        y_value = 'percentage'
+    elif percentage_by == "Class":
+        total_per_zone = df.groupby(class_name).size()
+        filtered_data = pd.DataFrame(filtered_data_tmp[class_name].value_counts() / total_per_zone * 100)
+        filtered_data.columns = ['percentage']
+        y_value = 'percentage'
+    else:
+        filtered_data = pd.DataFrame(filtered_data_tmp[class_name].value_counts())
+        filtered_data.columns = ['count']
+        y_value = 'count'
+
+    # Sort the data by ascending frequency if class_name is not 'year'
+    if class_name != 'year':
+        filtered_data.sort_values(by=y_value, ascending=True, inplace=True)
+    
+    # Create the bar chart with go.Figure
+    fig = go.Figure(data=[go.Bar(
+        x=filtered_data.index,
+        y=filtered_data[y_value],
+        text=['{:.2f}%'.format(val) for val in filtered_data['percentage']] if percentage_by != None else [cpt for cpt in filtered_data['count']],
+        # text=filtered_data_tmp[class_name].value_counts().reindex(filtered_data.index) if percentage_by != None else [cpt for cpt in filtered_data['count']],
+        textposition='auto',
+        marker_color=color,
+        hovertemplate='<b>%{x}</b><br>' + ('Count: %{customdata}<br>' + 'Percent: %{y:.2f}%' if percentage_by!=None else 'Count: %{y}<br>') + '<extra></extra>',
+        customdata= pd.DataFrame(filtered_data_tmp[class_name].value_counts()).reindex(filtered_data.index) # Align with filtered_data
+    )])
+
+    # Set the axis labels
+    fig.update_layout(xaxis_title=class_name, 
+                      yaxis_title=y_value, 
+                      title=f'Distribution of {emotion} by {class_name}' + (f' in {time_period}' if time_period is not None else ''),
+                      title_x=0.5, # Center the title
+                      **kwargs
+                      )
+
+    return fig
+
+
