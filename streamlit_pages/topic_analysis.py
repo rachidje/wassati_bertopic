@@ -100,12 +100,12 @@ def app():
         st.info("**'Topic-wise Percentage'**: This is calculated as the frequency of each topic within each class. In other words, it answers questions like 'What percentage of comments in 2023 were about topic A?' or 'What percentage of comments in Zone X were about topic B?'")
         # Giving user options for selecting the class repartition
         groupby_option = st.selectbox('Select group : by which class do you want to see the topic repartition?',groupby_options)
-        print_graph(f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}_pct.html', width=1300, height=750)
+        print_graph(f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}_pct.html', width=1500, height=750)
 
         st.subheader('''2. Class-wise Percentage''')
         st.info("'Class-wise Percentage': This is calculated as the frequency of each class within each topic. It answers questions like 'What percentage of comments about topic A were made in 2023?' or 'What percentage of comments about topic B were made in Zone X?'")
         # Giving user options for selecting the class repartition
         groupby_option = st.selectbox('Select group : by which class do you want to see the repartition?',groupby_options)
-        print_graph(f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}_class_pct.html', width=1300, height=750)
+        print_graph(f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}_class_pct.html', width=1500, height=750)
 
 

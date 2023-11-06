@@ -524,61 +524,38 @@ def sunburst(data_df, levels, color_sequence, unique_parent=True, class_column=N
     return fig
 
 
-# Plot a bar chart or histogram of the distribution of a given emotion by a specified class
-def plot_emotion(df, emotion, class_name, time_period=None, percentage_by=None, random_colors=True, set_colors=['#96ceb4', '#87bdd8', '#ffcc5c', '#ff6f69', '#f4a688', '#d96459'], set_color=None, **kwargs):
-    """
-    This function plots a bar chart of the distribution of a specified emotion by a specified class.
-
-    Parameters:
-    df (DataFrame): The input dataframe.
-    emotion (str): The emotion to filter the dataframe by.
-    class_name (str): The name of the class column in the dataframe.
-    time_period (int, optional): The time period to filter the dataframe by. Defaults to None.
-    use_percentage (bool, optional): Whether to calculate and plot percentages instead of counts. Defaults to False.
-    random_colors (bool, optional): Whether to choose a color randomly from the set_colors list. If False, set_color must be provided. Defaults to True.
-    set_colors (list of str, optional): The list of colors to choose from if random_colors is True. Defaults to ['#96ceb4', '#87bdd8', '#ffcc5c', '#ff6f69', '#f4a688', '#d96459'].
-    set_color (str, optional): The color to use for the plot if random_colors is False. Defaults to None.
-
-    Returns:
-    Figure: A Plotly figure containing the bar chart.
-    """
-    # Check that set_color is provided if random_colors is False
-    if random_colors==False and set_color is None:
-        raise ValueError("set_color must be provided if random_colors is False")
-
+# Plot a bar chart or histogram of the distribution of a specified class
+def plot_barchart_distribution(df, class_name, filter_col=None, filter_value=None, time_period=None, percentage_by=None, set_colors=['#96ceb4', '#87bdd8', '#ffcc5c', '#ff6f69', '#f4a688', '#d96459'], **kwargs):
     if percentage_by not in ["Topic","Class",None] :
         raise ValueError("'percentage_by' possible values are ['Topic','Class', None]")
     
+    if (filter_col is None) != (filter_value is None):
+        raise ValueError("Both 'filter_col' and 'filter_value' must be defined or both must be None.")
     
-    # Filter the data to only include rows with the specified emotion
-    filtered_data_tmp = df[df['single_emotion_label'] == emotion]
+    work_df = df.copy()
+    # Filter the data to only include rows with the specified value
+    if filter_value:
+        work_df = df[df[filter_col] == filter_value]
 
     # Filter the data by the specified time period if provided
     if time_period != None:
         if class_name == 'year':
             raise ValueError("class_name cannot be 'year' when time_period is defined")
-        filtered_data_tmp = filtered_data_tmp[filtered_data_tmp['year'] == time_period]
-
-    if random_colors:
-        # Randomly choose a color from the defined colors list
-        colors_list = set_colors
-        color = random.choice(colors_list)
-    else:
-        color = set_color
+        work_df = work_df[work_df['year'] == time_period]
 
     # Calculate the percentage if use_percentage is True
     if percentage_by == "Topic":
-        total_emotion = len(filtered_data_tmp)
-        filtered_data = pd.DataFrame(filtered_data_tmp[class_name].value_counts() / total_emotion * 100)
+        total = len(work_df)
+        filtered_data = pd.DataFrame(work_df[class_name].value_counts() / total * 100)
         filtered_data.columns = ['percentage']
         y_value = 'percentage'
     elif percentage_by == "Class":
-        total_per_zone = df.groupby(class_name).size()
-        filtered_data = pd.DataFrame(filtered_data_tmp[class_name].value_counts() / total_per_zone * 100)
+        total_per_class = df.groupby(class_name).size()
+        filtered_data = pd.DataFrame(work_df[class_name].value_counts() / total_per_class * 100)
         filtered_data.columns = ['percentage']
         y_value = 'percentage'
     else:
-        filtered_data = pd.DataFrame(filtered_data_tmp[class_name].value_counts())
+        filtered_data = pd.DataFrame(work_df[class_name].value_counts())
         filtered_data.columns = ['count']
         y_value = 'count'
 
@@ -586,26 +563,69 @@ def plot_emotion(df, emotion, class_name, time_period=None, percentage_by=None, 
     if class_name != 'year':
         filtered_data.sort_values(by=y_value, ascending=True, inplace=True)
     
-    # Create the bar chart with go.Figure
-    fig = go.Figure(data=[go.Bar(
-        x=filtered_data.index,
-        y=filtered_data[y_value],
-        text=['{:.2f}%'.format(val) for val in filtered_data['percentage']] if percentage_by != None else [cpt for cpt in filtered_data['count']],
-        # text=filtered_data_tmp[class_name].value_counts().reindex(filtered_data.index) if percentage_by != None else [cpt for cpt in filtered_data['count']],
-        textposition='auto',
-        marker_color=color,
-        hovertemplate='<b>%{x}</b><br>' + ('Count: %{customdata}<br>' + 'Percent: %{y:.2f}%' if percentage_by!=None else 'Count: %{y}<br>') + '<extra></extra>',
-        customdata= pd.DataFrame(filtered_data_tmp[class_name].value_counts()).reindex(filtered_data.index) # Align with filtered_data
-    )])
+    # Create a color iterator
+    color_sequence = set_colors
+    color_iterator = cycle(color_sequence)
+
+    fig = go.Figure(data=go.Bar(
+            name=str(class_name), 
+            x=filtered_data.index, 
+            y=filtered_data[y_value], 
+            marker_color=next(color_iterator), 
+            text=[str(pd.DataFrame(work_df[class_name].value_counts()).loc[index][0]) for index in filtered_data.index],
+            textposition='auto',
+            hovertemplate='<b>%{x}</b><br>' + ('Count: %{customdata}<br>' + 'Percent: %{y:.2f}%' if percentage_by!=None else 'Count: %{y}<br>') + '<extra></extra>',
+            customdata=[pd.DataFrame(work_df[class_name].value_counts()).loc[index] for index in filtered_data.index],
+            legendgroup=str(class_name)
+    ))
 
     # Set the axis labels
     fig.update_layout(xaxis_title=class_name, 
                       yaxis_title=y_value, 
-                      title=f'Distribution of {emotion} by {class_name}' + (f' in {time_period}' if time_period is not None else ''),
+                      title=(f'Distribution of {filter_value} by {class_name}' if filter_value else f'Distribution of {class_name}') + (f' in {time_period}' if time_period is not None else ''),
                       title_x=0.5, # Center the title
                       **kwargs
                       )
 
+    return fig
+
+def plot_barcharts_distribution(df, class_name, group_column, values_list=None, filter_col=None, filter_value=None, time_period=None, percentage_by=None, merge=False, color_sequence=['#636EFA','#EF553B','#00CC96','#AB63FA','#FFA15A','#19D3F3','#FF6692','#B6E880','#FF97FF','#FECB52','#E763FA','#BA68C8','#FFA000','#F06292','#7986CB','#4DB6AC','#FF8A65','#A1887F','#90A4AE','#E53935','#8E24AA'], **kwargs):
+    # If values_list is None, get all unique values from group_column
+    if values_list is None:
+        values_list = df[group_column].unique()
+
+    # Create a subplot for each unique value in the group column if not merging
+    if merge:
+        fig = go.Figure()
+    else:
+        fig = sp.make_subplots(rows=len(values_list), cols=1)
+
+    color_iterator = cycle(color_sequence)
+
+    for i, value in enumerate(values_list, start=1):
+        df_group = df[df[group_column] == value]
+
+        # Use plot_score_distribution function to create a bar chart for the group
+        fig_group = plot_barchart_distribution(df_group, class_name, filter_col=filter_col, filter_value=filter_value, time_period=time_period, percentage_by=percentage_by)
+
+        for trace in fig_group.data:
+            trace.name = str(value)  # set the trace name to the group value
+            trace.legendgroup = trace.name
+            trace.marker.color = next(color_iterator)
+            trace.hovertemplate = 'Group: '+str(value)+'<br>' + ('Count: %{customdata}<br>' + 'Percentage: %{y:.2f}%<extra></extra>' if percentage_by!=None else 'Count: %{y}<br><extra></extra>')
+            if merge:
+                fig.add_trace(trace)
+            else:
+                fig.add_trace(trace, row=i, col=1)
+
+        # Add y-axis title to each subplot if not merging
+        if not merge:
+            fig.update_yaxes(title_text=str(value), title_standoff=0, row=i, col=1)
+
+    # Update layout and add interactive legend
+    barmode = 'group' if merge else 'stack'
+    fig.update_layout(title_text=f"Distribution of {class_name} by {group_column}", barmode=barmode, showlegend=True, **kwargs)
+    
     return fig
 
 
