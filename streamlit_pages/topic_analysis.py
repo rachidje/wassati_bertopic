@@ -94,18 +94,39 @@ def app():
 
     with tab3:
         st.subheader("Topic Repartition")
-        st.write("This section is designed to provide a detailed overview of how the topics we identified in the 'Topic Discovery' section are distributed across different categories.<br><br>The main feature of this section is two barcharts that show the distribution of topics for a selected category. The category can be chosen from a selection box and could represent different aspects such as year, geographical zone, country, or market segment.<br><ul><li><strong>Topic-wise Percentage Barchart:</strong> Each bar in the chart represents a topic, and the length of the bar indicates the percentage of that topic within the selected category. The topics are color-coded for easy identification, and you can see the exact topic each color represents in the legend. The hovertext of each bar shows the count frequency, which is the raw number of occurrences of each topic.</li><li><strong>Class-wise Percentage Barchart:</strong> This chart shows how much each class (year, zone, etc.) contributes to a particular topic. It’s like asking, “What percentage of comments about topic A were made in 2023?” This can help us understand which topics are most relevant for each class.</li></ul><br>By exploring this chart, you can gain valuable insights into the prevalence and significance of each topic within different contexts.<br><br>", unsafe_allow_html=True)
+        st.write("This section is designed to provide a detailed overview of how the topics we identified in the 'Topic Discovery' section are distributed across different categories.<br><br>The main feature of this section is two barcharts that show the distribution of topics for a selected category. The category can be chosen from a selection box and could represent different aspects such as year, geographical zone, country, or market segment.<br><ul><li><strong>Class-wise Percentage Barchart:</strong> This chart shows how much each class (year, zone, etc.) contributes to a particular topic. It’s like asking, “What percentage of comments about topic A were made in 2023?” This can help us understand which topics are most relevant for each class.</li><li><strong>Topic-wise Percentage Barchart:</strong> Each bar in the chart represents a topic, and the length of the bar indicates the percentage of that topic within the selected category. The topics are color-coded for easy identification, and you can see the exact topic each color represents in the legend. The hovertext of each bar shows the count frequency, which is the raw number of occurrences of each topic.</li></ul>By exploring this chart, you can gain valuable insights into the prevalence and significance of each topic within different contexts.<br><br>", unsafe_allow_html=True)
 
-        st.subheader('''1. Topic-wise Percentage''')
-        st.info("**'Topic-wise Percentage'**: This is calculated as the frequency of each topic within each class. In other words, it answers questions like 'What percentage of comments in 2023 were about topic A?' or 'What percentage of comments in Zone X were about topic B?'")
-        # Giving user options for selecting the class repartition
-        groupby_option = st.selectbox('Select group : by which class do you want to see the topic repartition?',groupby_options)
-        print_graph(f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}_pct.html', width=1500, height=750)
-
-        st.subheader('''2. Class-wise Percentage''')
+        st.subheader('''1. Class-wise Percentage''')
         st.info("'Class-wise Percentage': This is calculated as the frequency of each class within each topic. It answers questions like 'What percentage of comments about topic A were made in 2023?' or 'What percentage of comments about topic B were made in Zone X?'")
+        st.write("""**Keys to analyze the Class-wise Percentage Barchart**: 
+- This chart should be interpreted topic by topic to understand the distribution of each topic across different classes. For each topic, the chart shows the percentage of comments within each class, providing a clear picture of how discussion on that topic is distributed.
+
+- When multiple topics are added to the chart, it allows for a comparative analysis of topic distributions. Since the percentages provide a normalized basis for comparison, it’s possible to directly compare the distribution of different topics across the same classes. This can highlight interesting contrasts and similarities in the way different topics are discussed within each class.
+
+- **For example**, if Topic A and Topic B are both added to the chart, you might notice that Topic A has a high percentage of comments in 2023, while Topic B has a more even distribution across several years. This could indicate that Topic A was a trending topic in 2023, while Topic B has been a consistent point of discussion over time.
+
+- **In summary**, the key to effectively using this chart is to analyze one topic at a time, and then use the percentage-based comparison to understand the relative distribution of multiple topics.""")
         # Giving user options for selecting the class repartition
         groupby_option = st.selectbox('Select group : by which class do you want to see the repartition?',groupby_options)
+        print_graph(f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}_pct.html', width=1500, height=750)
+
+        st.subheader('''2. Topic-wise Percentage''')
+        st.info("**'Topic-wise Percentage'**: This is calculated as the frequency of each topic within each class. In other words, it answers questions like 'What percentage of comments in 2023 were about topic A?' or 'What percentage of comments in Zone X were about topic B?'")
+
+        st.write("""**Keys to analyze the Topic-wise Percentage Barchart**:
+- This chart provides a comprehensive view of the distribution of comments across different topics within a selected class. Each segment of a stacked bar represents a topic, and its length indicates the percentage of comments about that topic within the chosen class.
+                 
+- **For instance**, if you select the class '2023', the chart will show the distribution of topics discussed in that year. A larger segment for Topic A would mean that a higher percentage of comments in 2023 were about Topic A. The color-coding and the legend aid in identifying each topic quickly and easily.
+
+- When multiple classes are selected, the chart allows for a comparative analysis of topic distributions across these classes. For example, comparing the stacked bars for '2023' and '2022' could reveal shifts in discussion trends over the years.
+
+- The hovertext feature provides additional information by showing the raw count frequency, which is the actual number of occurrences of each topic. This can give you a sense of the volume of discussion around each topic.
+
+- **In summary**, the Topic-wise Percentage Barchart, with its stacked presentation, is a powerful tool for understanding the prominence of different topics within each class and tracking changes over time or across different areas.""")
+
+        # Giving user options for selecting the class repartition
+        groupby_option = st.selectbox('Select group : by which class do you want to see the topic repartition?',groupby_options)
         print_graph(f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}_class_pct.html', width=1500, height=750)
+
 
 

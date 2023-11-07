@@ -43,12 +43,16 @@ def app():
         st.plotly_chart(fig)
 
 
-    st.subheader("Repartition of the emotions within a subclass")
+    st.subheader("Repartition of the emotions within a subclass and topics")
     st.write("""Here we can track the repartition of a specific emotion according to a specified data group.\n\n""")
     emotion = st.selectbox('Which emotion do you want to see the repartition ?',my_data["emotions"])
     groupby_option = st.selectbox('With which class do you want to see the topic repartition of the emotion chosen?',groupby_options)
-    col1, col2, col3, col4 = st.columns([3,1,1,5])
-    data_representation_buttons("single_emotion_by_group_and_topic", [col2, col3], ['By Count', 'By Percentage'])
-    paths = [f'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/emotion_by_class/by_{groupby_option}/{emotion}.html',
-            f'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/emotion_by_class/by_{groupby_option}/{emotion}_pct.html']
-    print_choice("single_emotion_by_group_and_topic", paths, ['By Count', 'By Percentage'], height=750)
+
+    st.subheader("Class-wise")    
+    print_graph(f'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/emotion_by_class/by_{groupby_option}/{emotion}_pct.html',height=750)
+    st.subheader("Topic-wise")    
+    print_graph(f'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/emotion_by_class/by_{groupby_option}/{emotion}_class_pct.html',height=750)
+    st.subheader("Repartition by levels")    
+    emotion_sunburst = st.selectbox('Select one emotion',my_data["emotions"])
+    fig = sunburst(data, levels, color_sequence, unique_parent=True, class_column="single_emotion_label", class_value=emotion_sunburst)
+    st.plotly_chart(fig)
