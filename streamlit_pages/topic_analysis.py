@@ -10,7 +10,7 @@ def app():
 
     with tab1:
         st.info("""
-        **Tech point : What is clustering?**
+        **What is clustering?**
         
         Clustering is a technique used to group similar data points together. In the context of Natural Language Processing (NLP), clustering can be used to identify patterns and relationships in large amounts of text data. This can be a challenging task, as language is complex and often ambiguous, and there are many different ways that text data can be represented and analyzed.
 
@@ -80,6 +80,10 @@ def app():
         st.subheader('''Heatmaps Graphics''')
         st.info("A heatmap is like a table or grid, where each cell is colored based on its value. Imagine a weather map showing temperatures - areas with similar temperatures have the same color. A heatmap works in a similar way, but it’s usually used to show how much two things are related to each other.")
         st.write("""Let's see how the topics are related to each other\n\n""")
+        st.write('**How to interpret the heatmaps chart ?**\n\n')
+        st.write('Each cell shows how similar two customer service components are. The darker the color, the more similar they are.\n'
+                 'For example, “Customer Support” and “Product Evaluation” are very similar, as indicated by the dark blue color. On the other hand, “Positive feedback” and “Power Supply Issues” are not very similar, as indicated by the light green color. This helps us understand which components are closely related.')
+
         # Display two heatmap images side by side.
         col1, col2 = st.columns(2)
         with col1:
@@ -88,16 +92,13 @@ def app():
         with col2:
             st.markdown("<h4 style='text-align: center; color: grey;'>The sub-topics relations</h4>", unsafe_allow_html=True)
             print_graph('data/graphs/Clustering/heatmap/topic_heatmap.html', height=750)
-        st.write('**How to interpret the heatmaps chart ?**\n\n')
-        st.write('Each cell shows how similar two customer service components are. The darker the color, the more similar they are.\n'
-                 'For example, “Customer Support” and “Product Evaluation” are very similar, as indicated by the dark blue color. On the other hand, “Positive feedback” and “Power Supply Issues” are not very similar, as indicated by the light green color. This helps us understand which components are closely related.')
 
     with tab3:
         st.subheader("Topic Repartition")
         st.write("This section is designed to provide a detailed overview of how the topics we identified in the 'Topic Discovery' section are distributed across different categories.<br><br>The main feature of this section is two barcharts that show the distribution of topics for a selected category. The category can be chosen from a selection box and could represent different aspects such as year, geographical zone, country, or market segment.<br><ul><li><strong>Class-wise Percentage Barchart:</strong> This chart shows how much each class (year, zone, etc.) contributes to a particular topic. It’s like asking, “What percentage of comments about topic A were made in 2023?” This can help us understand which topics are most relevant for each class.</li><li><strong>Topic-wise Percentage Barchart:</strong> Each bar in the chart represents a topic, and the length of the bar indicates the percentage of that topic within the selected category. The topics are color-coded for easy identification, and you can see the exact topic each color represents in the legend. The hovertext of each bar shows the count frequency, which is the raw number of occurrences of each topic.</li></ul>By exploring this chart, you can gain valuable insights into the prevalence and significance of each topic within different contexts.<br><br>", unsafe_allow_html=True)
 
         st.subheader('''1. Class-wise Percentage''')
-        st.info("'Class-wise Percentage': This is calculated as the frequency of each class within each topic. It answers questions like 'What percentage of comments about topic A were made in 2023?' or 'What percentage of comments about topic B were made in Zone X?'")
+        st.info("**Class-wise Percentage**: This is calculated as the frequency of each class within each topic. It answers questions like 'What percentage of comments about topic A were made in 2023?' or 'What percentage of comments about topic B were made in Zone X?'")
         st.write("""**Keys to analyze the Class-wise Percentage Barchart**: 
 - This chart should be interpreted topic by topic to understand the distribution of each topic across different classes. For each topic, the chart shows the percentage of comments within each class, providing a clear picture of how discussion on that topic is distributed.
 

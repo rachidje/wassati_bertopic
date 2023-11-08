@@ -13,7 +13,7 @@ def app():
 
     In this overview section, we’ll present some high-level insights from the data.
     Remember this is just the beginning of our data journey. As we delve deeper into the dashboard, we’ll uncover more detailed insights about specific topics, sentiments, and how they vary across different classes.
-    <br><br><br><br>
+    <br><br>
     """, unsafe_allow_html=True)
 
     nb_scores = data["Overall Satisfaction"].count()

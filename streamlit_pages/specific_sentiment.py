@@ -54,5 +54,7 @@ def app():
     print_graph(f'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/emotion_by_class/by_{groupby_option}/{emotion}_class_pct.html',height=750)
     st.subheader("Repartition by levels")    
     emotion_sunburst = st.selectbox('Select one emotion',my_data["emotions"])
-    fig = sunburst(data, levels, color_sequence, unique_parent=True, class_column="single_emotion_label", class_value=emotion_sunburst)
-    st.plotly_chart(fig)
+    col1, col2, col3 = st.columns([1,3,1])
+    with col2:
+        fig = sunburst(data, levels, color_sequence, unique_parent=True, class_column="single_emotion_label", class_value=emotion_sunburst)
+        st.plotly_chart(fig)
