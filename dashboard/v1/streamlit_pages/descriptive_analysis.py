@@ -1,7 +1,5 @@
 import streamlit as st
 from utils.streamlit_utils import *
-
-
 import copy 
 
 def app():
@@ -41,10 +39,16 @@ def app():
         # Score Distribution Global
         st.markdown("<h3 style='text-align: center;'><br>Global Score Distribution</h3>", unsafe_allow_html=True)
         _, col2, _ = st.columns([1,3,1])
-        paths = ['data/graphs/Descriptive_Analysis/score_repartition/score_distribution.html',
-                'data/graphs/Descriptive_Analysis/score_repartition/recommend_score_distribution.html']
+        # paths = ['data/graphs/Descriptive_Analysis/score_repartition/score_distribution.html',
+        #         'data/graphs/Descriptive_Analysis/score_repartition/recommend_score_distribution.html']
         with col2:
-            print_choice("score type", paths, labels, height=500, width=1000)
+            if st.session_state["score type"] == "Score":
+                fig = plot_barchart_distribution(data, "Overall Satisfaction", percentage_by="Topic", width=1000, height=500)
+                st.plotly_chart(fig)
+
+            else:
+                fig = plot_barchart_distribution(data, "Likelihood to Recommend (SE)", percentage_by="Topic", width=1000, height=500)                
+                st.plotly_chart(fig)
 
         # Score Distribution by Group
         st.markdown("<h3 style='text-align: center;'>Score Distribution by group</h3>", unsafe_allow_html=True)
@@ -58,10 +62,10 @@ def app():
         # Call the function to create and print the chart
         if values:
             if st.session_state['score type'] == 'Score':
-                fig = plots_score_distribution(data, 'Overall Satisfaction', st.session_state['groupby_option'], values_list=values, metric_type="percentage", merge=True, height=700, width=1300)
+                fig = plot_barcharts_distribution(data, "Overall Satisfaction", groupby_option, values_list=values, time_period=None, percentage_by="Topic", merge=True, width=1300, height=700)
                 st.plotly_chart(fig)
             else:
-                fig = plots_score_distribution(data, 'Likelihood to Recommend (SE)', st.session_state['groupby_option'], values_list=values, metric_type="percentage", merge=True, height=700, width=1300)
+                fig = plot_barcharts_distribution(data, "Likelihood to Recommend (SE)", groupby_option, values_list=values, time_period=None, percentage_by="Topic", merge=True, width=1300, height=700)
                 st.plotly_chart(fig)
         else:
             st.warning("Please select at least one value to see the score distribution chart.")
@@ -90,3 +94,4 @@ def app():
         with col2:
             fig = sunburst(data_comments_only, levels, color_sequence, unique_parent=True)
             st.plotly_chart(fig)
+

@@ -10,7 +10,7 @@ def app():
 
     with tab1:
         st.info("""
-        **Tech point : What is clustering?**
+        **What is clustering?**
         
         Clustering is a technique used to group similar data points together. In the context of Natural Language Processing (NLP), clustering can be used to identify patterns and relationships in large amounts of text data. This can be a challenging task, as language is complex and often ambiguous, and there are many different ways that text data can be represented and analyzed.
 
@@ -55,13 +55,13 @@ def app():
         st.write("This section provides a detailed overview of the 12 topics we identified in the Topic Discovery section. You'll see in more detail what the topics correspond to and how they've evolved over time.\n\n")
         st.subheader('''Vizualize documents per aggregated topic''')
         st.write("First, we have a 2D plot that visualizes the reviews in a 2D space per topic. Each point on this plot represents a review, and the distance between points indicates how similar the topics of the reviews are. Points that are close together are reviews that discuss similar topics.")
-        print_graph('data/graphs/Clustering/documents_viz/topic_merged_visualize_reduced_docs.html', height=750)
+        print_graph('data/graphs/Clustering/documents_viz/topic_merged_visualize_reduced_docs.html', height=750, width=1300)
 
         st.subheader('''Wordcloud''')
         st.info("A wordcloud is a visual representation of text data where the size of each word indicates its importance. So, the larger the word in the wordcloud, the more strongly it defines the topic.")
         st.write("""Let's see how the aggregated topics are described through their corresponding wordcloud images\n\n""")
         # Giving user options for selecting the topic
-        topic_option = st.selectbox('Select topic : which wordcloud do you want to see ?', [f"{topic[0].upper()}{topic[1:]}" for topic in my_data["merged_topics"]])
+        topic_option = st.selectbox('Select topic : which wordcloud do you want to see ?', my_data["merged_topics"])
         # Display two wordcloud images side by side.
         col1, col2 = st.columns(2)
         with col1:
@@ -80,6 +80,10 @@ def app():
         st.subheader('''Heatmaps Graphics''')
         st.info("A heatmap is like a table or grid, where each cell is colored based on its value. Imagine a weather map showing temperatures - areas with similar temperatures have the same color. A heatmap works in a similar way, but it’s usually used to show how much two things are related to each other.")
         st.write("""Let's see how the topics are related to each other\n\n""")
+        st.write('**How to interpret the heatmaps chart ?**\n\n')
+        st.write('Each cell shows how similar two customer service components are. The darker the color, the more similar they are.\n'
+                 'For example, “Customer Support” and “Product Evaluation” are very similar, as indicated by the dark blue color. On the other hand, “Positive feedback” and “Power Supply Issues” are not very similar, as indicated by the light green color. This helps us understand which components are closely related.')
+
         # Display two heatmap images side by side.
         col1, col2 = st.columns(2)
         with col1:
@@ -88,20 +92,42 @@ def app():
         with col2:
             st.markdown("<h4 style='text-align: center; color: grey;'>The sub-topics relations</h4>", unsafe_allow_html=True)
             print_graph('data/graphs/Clustering/heatmap/topic_heatmap.html', height=750)
-        st.write('**How to interpret the heatmaps chart ?**\n\n')
-        st.write('Each cell shows how similar two customer service components are. The darker the color, the more similar they are.\n'
-                 'For example, “Customer Support” and “Product Evaluation” are very similar, as indicated by the dark blue color. On the other hand, “Positive feedback” and “Power Supply Issues” are not very similar, as indicated by the light green color. This helps us understand which components are closely related.')
 
     with tab3:
         st.subheader("Topic Repartition")
-        st.write("This section is designed to provide a detailed overview of how the topics we identified in the 'Topic Discovery' section are distributed across different categories.<br><br>The main feature of this section is a barchart that shows the distribution of topics for a selected category. The category can be chosen from a selection box and could represent different aspects such as year, geographical zone, country, or market segment.<br>Each bar in the chart represents a topic, and the length of the bar indicates the frequency of that topic within the selected category. The topics are color-coded for easy identification, and you can see the exact topic each color represents in the legend.<br><br>You also have the option to view the data in terms of count frequency or percentage. Count frequency shows the raw number of occurrences, while percentage shows the proportion of each topic out of the total for that category. Viewing the data in terms of percentage can be useful for comparing topics with each other, as it puts all topics on the same base (100%). This can give a more accurate picture of the distribution, especially when the total number of reviews varies significantly between topics.<br><br>By exploring this chart, you can gain valuable insights into the prevalence and significance of each topic within different contexts.<br><br>", unsafe_allow_html=True)
+        st.write("This section is designed to provide a detailed overview of how the topics we identified in the 'Topic Discovery' section are distributed across different categories.<br><br>The main feature of this section is two barcharts that show the distribution of topics for a selected category. The category can be chosen from a selection box and could represent different aspects such as year, geographical zone, country, or market segment.<br><ul><li><strong>Class-wise Percentage Barchart:</strong> This chart shows how much each class (year, zone, etc.) contributes to a particular topic. It’s like asking, “What percentage of comments about topic A were made in 2023?” This can help us understand which topics are most relevant for each class.</li><li><strong>Topic-wise Percentage Barchart:</strong> Each bar in the chart represents a topic, and the length of the bar indicates the percentage of that topic within the selected category. The topics are color-coded for easy identification, and you can see the exact topic each color represents in the legend. The hovertext of each bar shows the count frequency, which is the raw number of occurrences of each topic.</li></ul>By exploring this chart, you can gain valuable insights into the prevalence and significance of each topic within different contexts.<br><br>", unsafe_allow_html=True)
+
+        st.subheader('''1. Class-wise Percentage''')
+        st.info("**Class-wise Percentage**: This is calculated as the frequency of each class within each topic. It answers questions like 'What percentage of comments about topic A were made in 2023?' or 'What percentage of comments about topic B were made in Zone X?'")
+        st.write("""**Keys to analyze the Class-wise Percentage Barchart**: 
+- This chart should be interpreted topic by topic to understand the distribution of each topic across different classes. For each topic, the chart shows the percentage of comments within each class, providing a clear picture of how discussion on that topic is distributed.
+
+- When multiple topics are added to the chart, it allows for a comparative analysis of topic distributions. Since the percentages provide a normalized basis for comparison, it’s possible to directly compare the distribution of different topics across the same classes. This can highlight interesting contrasts and similarities in the way different topics are discussed within each class.
+
+- **For example**, if Topic A and Topic B are both added to the chart, you might notice that Topic A has a high percentage of comments in 2023, while Topic B has a more even distribution across several years. This could indicate that Topic A was a trending topic in 2023, while Topic B has been a consistent point of discussion over time.
+
+- **In summary**, the key to effectively using this chart is to analyze one topic at a time, and then use the percentage-based comparison to understand the relative distribution of multiple topics.""")
+        # Giving user options for selecting the class repartition
+        groupby_option = st.selectbox('Select group : by which class do you want to see the repartition?',groupby_options)
+        print_graph(f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}_pct.html', width=1500, height=750)
+
+        st.subheader('''2. Topic-wise Percentage''')
+        st.info("**'Topic-wise Percentage'**: This is calculated as the frequency of each topic within each class. In other words, it answers questions like 'What percentage of comments in 2023 were about topic A?' or 'What percentage of comments in Zone X were about topic B?'")
+
+        st.write("""**Keys to analyze the Topic-wise Percentage Barchart**:
+- This chart provides a comprehensive view of the distribution of comments across different topics within a selected class. Each segment of a stacked bar represents a topic, and its length indicates the percentage of comments about that topic within the chosen class.
+                 
+- **For instance**, if you select the class '2023', the chart will show the distribution of topics discussed in that year. A larger segment for Topic A would mean that a higher percentage of comments in 2023 were about Topic A. The color-coding and the legend aid in identifying each topic quickly and easily.
+
+- When multiple classes are selected, the chart allows for a comparative analysis of topic distributions across these classes. For example, comparing the stacked bars for '2023' and '2022' could reveal shifts in discussion trends over the years.
+
+- The hovertext feature provides additional information by showing the raw count frequency, which is the actual number of occurrences of each topic. This can give you a sense of the volume of discussion around each topic.
+
+- **In summary**, the Topic-wise Percentage Barchart, with its stacked presentation, is a powerful tool for understanding the prominence of different topics within each class and tracking changes over time or across different areas.""")
+
         # Giving user options for selecting the class repartition
         groupby_option = st.selectbox('Select group : by which class do you want to see the topic repartition?',groupby_options)
+        print_graph(f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}_class_pct.html', width=1500, height=750)
 
-        # Add buttons to choose for frequency or percentage for the representation of the data 
-        _, col2, col3, _ = st.columns([3,1,1,7])
-        data_representation_buttons("topic_repartition", [col2, col3], ["By Count", "By Percentage"])
-        # Produces topic_per_class barchart
-        path_freq = f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}.html'
-        path_pct = f'data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}_pct.html'
-        print_choice("topic_repartition", [path_freq, path_pct], ["By Count", "By Percentage"], height=750)
+
+
