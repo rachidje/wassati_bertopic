@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.9
 import streamlit as st
 import streamlit_authenticator as stauth
 from yaml.loader import SafeLoader
