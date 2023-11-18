@@ -61,7 +61,7 @@ def app():
         st.info("A wordcloud is a visual representation of text data where the size of each word indicates its importance. So, the larger the word in the wordcloud, the more strongly it defines the topic.")
         st.write("""Let's see how the aggregated topics are described through their corresponding wordcloud images\n\n""")
         # Giving user options for selecting the topic
-        topic_option = st.selectbox('Select topic : which wordcloud do you want to see ?', my_data["merged_topics"])
+        topic_option = st.selectbox('Select topic : which wordcloud do you want to see ?', [f"{topic[0].upper()}{topic[1:]}" for topic in my_data["merged_topics"]])
         # Display two wordcloud images side by side.
         col1, col2 = st.columns(2)
         with col1:

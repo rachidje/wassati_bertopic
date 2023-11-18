@@ -69,7 +69,7 @@ def app():
     st.subheader('Single emotion repartition')
     st.write("""Here we study the repartition of each emotion by a certain group.\n\n""")
     # Giving user options for selecting the emotion
-    emotion = st.selectbox('Select the emotion you want to study',my_data["emotions"])
+    emotion = st.selectbox('Select the emotion you want to study',my_data["emotions"][1:])
     groupby_option = st.selectbox('Select the group you want to study the emotion on',groupby_options)
 
     # We define 3 columns in order to put the image in the second and then have it centered
