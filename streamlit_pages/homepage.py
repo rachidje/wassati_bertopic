@@ -49,12 +49,12 @@ Wassati is delighted to introduce the new version of our prototype dashboard, wh
 
         col1,col2 = st.columns([1,1])
         with col1:
-            st.markdown("<div style='text-align: center; font-size: 50px;'><strong>55K</strong></div>", unsafe_allow_html=True)
-            st.markdown("<div style='text-align: center; font-size: 20px;'>The data contains 55 072 individual 'Overall Satisfaction' scores</div>", unsafe_allow_html=True)
+            st.markdown("<div style='text-align: center; font-size: 50px;'><strong>62K</strong></div>", unsafe_allow_html=True)
+            st.markdown("<div style='text-align: center; font-size: 20px;'>The data contains 62 537 individual 'Overall Satisfaction' scores</div>", unsafe_allow_html=True)
             st.write("<br><br>", unsafe_allow_html=True)
         with col2:
-            st.markdown("<div style='text-align: center; font-size: 50px;'><strong>19K</strong></div>", unsafe_allow_html=True)
-            st.markdown("<div style='text-align: center; font-size: 20px;'>The data contains 19 059 individual 'Likelihood to Recommend' scores</div>", unsafe_allow_html=True)
+            st.markdown("<div style='text-align: center; font-size: 50px;'><strong>20K</strong></div>", unsafe_allow_html=True)
+            st.markdown("<div style='text-align: center; font-size: 20px;'>The data contains 20 649 individual 'Likelihood to Recommend' scores</div>", unsafe_allow_html=True)
             st.write("<br><br>", unsafe_allow_html=True)
 
         _,middle,_ = st.columns([1,1,1])
