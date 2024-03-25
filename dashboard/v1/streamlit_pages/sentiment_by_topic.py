@@ -28,19 +28,19 @@ def app():
     col1, col2 = st.columns([1,2.3])
     with col1:
         # st.markdown("<h4 style='text-align: center; color: grey;'>By Sentiment</h4>", unsafe_allow_html=True)
-        print_graph('../data/graphs/Sentiment_Analysis/by_sentiment/repartition_per_topic/global/model_merged_per_sentiment_pct.html', width=700, height=750)
+        print_graph('dashboard/data/graphs/Sentiment_Analysis/by_sentiment/repartition_per_topic/global/model_merged_per_sentiment_pct.html', width=700, height=750)
     with col2:
         # st.markdown("<h4 style='text-align: center; color: grey;'>By Emotion</h4>", unsafe_allow_html=True)
-        print_graph('../data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/global/model_merged_per_emotion_pct.html', width=1150, height=750)
+        print_graph('dashboard/data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/global/model_merged_per_emotion_pct.html', width=1150, height=750)
 
     st.subheader("Topic-wise")
     col1, col2 = st.columns([1,1])
     with col1:
         # st.markdown("<h4 style='text-align: center; color: grey;'>By Sentiment</h4>", unsafe_allow_html=True)
-        print_graph('../data/graphs/Sentiment_Analysis/by_sentiment/repartition_per_topic/global/model_merged_per_sentiment_class_pct.html', width=700, height=750)
+        print_graph('dashboard/data/graphs/Sentiment_Analysis/by_sentiment/repartition_per_topic/global/model_merged_per_sentiment_class_pct.html', width=700, height=750)
     with col2:
         # st.markdown("<h4 style='text-align: center; color: grey;'>By Emotion</h4>", unsafe_allow_html=True)
-        print_graph('../data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/global/model_merged_per_emotion_class_pct.html', width=1150, height=750)
+        print_graph('dashboard/data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/global/model_merged_per_emotion_class_pct.html', width=1150, height=750)
 
 
     st.subheader("**2.2** - Emotions Repartition according to a subclass AND the topics")
@@ -50,6 +50,6 @@ def app():
     value = st.selectbox(f'By which {shorter_names[groupby_option]} do you want to see the emotion topic repartition?',options)
  
     st.subheader("Class-wise")
-    print_graph(f'../data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/class_by_emotions/by_{groupby_option}/{value}_pct.html',width=1500, height=750)
+    print_graph(f'dashboard/data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/class_by_emotions/by_{groupby_option}/{value}_pct.html',width=1500, height=750)
     st.subheader("Topic-wise")
-    print_graph(f'../data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/class_by_emotions/by_{groupby_option}/{value}_class_pct.html',width=1500, height=750)
+    print_graph(f'dashboard/data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/class_by_emotions/by_{groupby_option}/{value}_class_pct.html',width=1500, height=750)

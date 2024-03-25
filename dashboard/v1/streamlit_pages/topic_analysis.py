@@ -23,15 +23,15 @@ def app():
         col1, col2 = st.columns([1,1.7])
         with col1:
             st.markdown("<h3 style='text-align: center; color: black;'>Many very precise topics</h3>", unsafe_allow_html=True)
-            print_graph('../data/graphs/Clustering/global/topic_visualize_topics.html', height=750)
+            print_graph('dashboard/data/graphs/Clustering/global/topic_visualize_topics.html', height=750)
         with col2:
             st.markdown("<h3 style='text-align: center; color: black;'>The biggest 12 topics keywords</h3>", unsafe_allow_html=True)
-            print_graph('../data/graphs/Clustering/global/top_12_topics_barchart_viz.html', height=750)
+            print_graph('dashboard/data/graphs/Clustering/global/top_12_topics_barchart_viz.html', height=750)
 
 
         st.subheader('''Topics hierarchy''')
         st.write("""Below there's a Hierarchical Clustering chart. This chart shows the relationships between the many base topics, giving us a bird's eye view of the topic structure.<br><br>""", unsafe_allow_html=True)
-        print_graph('../data/graphs/Clustering/hierarchy/topics_hierarchy.html', height=1050)
+        print_graph('dashboard/data/graphs/Clustering/hierarchy/topics_hierarchy.html', height=1050)
 
 
         st.subheader('Aggregated Topics')
@@ -55,7 +55,7 @@ def app():
         st.write("This section provides a detailed overview of the 12 topics we identified in the Topic Discovery section. You'll see in more detail what the topics correspond to and how they've evolved over time.\n\n")
         st.subheader('''Vizualize documents per aggregated topic''')
         st.write("First, we have a 2D plot that visualizes the reviews in a 2D space per topic. Each point on this plot represents a review, and the distance between points indicates how similar the topics of the reviews are. Points that are close together are reviews that discuss similar topics.")
-        print_graph('../data/graphs/Clustering/documents_viz/topic_merged_visualize_reduced_docs.html', height=750, width=1300)
+        print_graph('dashboard/data/graphs/Clustering/documents_viz/topic_merged_visualize_reduced_docs.html', height=750, width=1300)
 
         st.subheader('''Wordcloud''')
         st.info("A wordcloud is a visual representation of text data where the size of each word indicates its importance. So, the larger the word in the wordcloud, the more strongly it defines the topic.")
@@ -66,15 +66,15 @@ def app():
         col1, col2 = st.columns(2)
         with col1:
             st.markdown(f"<h4 style='text-align: center; color: grey;'>topic_option Wordcloud</h4>", unsafe_allow_html=True)
-            st.image(f'../data/wordclouds/topic_model_merged/{topic_option}.png')
+            st.image(f'dashboard/data/wordclouds/topic_model_merged/{topic_option}.png')
         # with col2:
         #     st.markdown(f"<h4 style='text-align: center; color: grey;'>topic_option Wordcloud with lemmatized words</h4>", unsafe_allow_html=True)
-        #     st.image(f'../data/wordclouds/topic_model_merged/{topic_option}_lemmatized.png') 
+        #     st.image(f'dashboard/data/wordclouds/topic_model_merged/{topic_option}_lemmatized.png') 
 
         st.write("<br><br>", unsafe_allow_html=True)
         st.subheader('''Topic Evolution''')
         st.write("""Let's check the topics evolution in time (by months). This chart shows how the prevalence of each topic has changed over time. Each line represents a topic, and the height of the line at any point in time indicates how prevalent that topic was among the reviews at that time.\n\n""")
-        print_graph('../data/graphs/Clustering/topic_in_time/topic_merged_time_by_months.html', height=500)
+        print_graph('dashboard/data/graphs/Clustering/topic_in_time/topic_merged_time_by_months.html', height=500)
 
 
         st.subheader('''Heatmaps Graphics''')
@@ -88,10 +88,10 @@ def app():
         col1, col2 = st.columns(2)
         with col1:
             st.markdown("<h4 style='text-align: center; color: grey;'>The global topics relations</h4>", unsafe_allow_html=True)
-            print_graph('../data/graphs/Clustering/heatmap/topic_merged_heatmap.html', height=750)
+            print_graph('dashboard/data/graphs/Clustering/heatmap/topic_merged_heatmap.html', height=750)
         with col2:
             st.markdown("<h4 style='text-align: center; color: grey;'>The sub-topics relations</h4>", unsafe_allow_html=True)
-            print_graph('../data/graphs/Clustering/heatmap/topic_heatmap.html', height=750)
+            print_graph('dashboard/data/graphs/Clustering/heatmap/topic_heatmap.html', height=750)
 
     with tab3:
         st.subheader("Topic Repartition")
@@ -109,7 +109,7 @@ def app():
 - **In summary**, the key to effectively using this chart is to analyze one topic at a time, and then use the percentage-based comparison to understand the relative distribution of multiple topics.""")
         # Giving user options for selecting the class repartition
         groupby_option = st.selectbox('Select group : by which class do you want to see the repartition?',groupby_options)
-        print_graph(f'../data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}_pct.html', width=1500, height=750)
+        print_graph(f'dashboard/data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}_pct.html', width=1500, height=750)
 
         st.subheader('''2. Topic-wise Percentage''')
         st.info("**'Topic-wise Percentage'**: This is calculated as the frequency of each topic within each class. In other words, it answers questions like 'What percentage of comments in 2023 were about topic A?' or 'What percentage of comments in Zone X were about topic B?'")
@@ -127,7 +127,7 @@ def app():
 
         # Giving user options for selecting the class repartition
         groupby_option = st.selectbox('Select group : by which class do you want to see the topic repartition?',groupby_options)
-        print_graph(f'../data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}_class_pct.html', width=1500, height=750)
+        print_graph(f'dashboard/data/graphs/Clustering/topic_repartition/by_{groupby_option}/model_merged_per_{groupby_option}_class_pct.html', width=1500, height=750)
 
 
 

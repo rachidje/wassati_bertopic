@@ -49,9 +49,9 @@ def app():
     groupby_option = st.selectbox('With which class do you want to see the topic repartition of the emotion chosen?',groupby_options)
 
     st.subheader("Class-wise")    
-    print_graph(f'../data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/emotion_by_class/by_{groupby_option}/{emotion}_pct.html',height=750)
+    print_graph(f'dashboard/data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/emotion_by_class/by_{groupby_option}/{emotion}_pct.html',height=750)
     st.subheader("Topic-wise")    
-    print_graph(f'../data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/emotion_by_class/by_{groupby_option}/{emotion}_class_pct.html',height=750)
+    print_graph(f'dashboard/data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/emotion_by_class/by_{groupby_option}/{emotion}_class_pct.html',height=750)
     st.subheader("Repartition by levels")    
     emotion_sunburst = st.selectbox('Select one emotion',my_data["emotions"])
     col1, col2, col3 = st.columns([1,3,1])
