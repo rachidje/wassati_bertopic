@@ -18,7 +18,7 @@ def load_data():
     pandas.DataFrame: The loaded data.
     """
     # data = pd.read_csv('data/csv_files/schneider_processed_labelled_full.csv')
-    data = pd.read_csv('data/csv_files/schneider_all_processed_labelled_full.csv')
+    data = pd.read_csv('data/csv_files/schneider_all_processed_labelled_full_newBertopic.csv')
     return data
 
 def print_graph(path, height=None, width=None):

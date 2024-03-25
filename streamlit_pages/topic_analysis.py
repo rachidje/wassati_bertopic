@@ -23,39 +23,50 @@ def app():
         col1, col2 = st.columns([1,1.7])
         with col1:
             st.markdown("<h3 style='text-align: center; color: black;'>Many very precise topics</h3>", unsafe_allow_html=True)
-            print_graph('data/graphs/Clustering/global/topic_visualize_topics.html', height=750)
+            print_graph('data/graphs/Clustering/global/new_topic_visualize_topics.html', height=750)
         with col2:
             st.markdown("<h3 style='text-align: center; color: black;'>The biggest 12 topics keywords</h3>", unsafe_allow_html=True)
-            print_graph('data/graphs/Clustering/global/top_12_topics_barchart_viz.html', height=750)
+            print_graph('data/graphs/Clustering/global/new_top_12_topics_barchart_viz.html', height=750)
 
 
         st.subheader('''Topics hierarchy''')
         st.write("""Below there's a Hierarchical Clustering chart. This chart shows the relationships between the many base topics, giving us a bird's eye view of the topic structure.<br><br>""", unsafe_allow_html=True)
-        print_graph('data/graphs/Clustering/hierarchy/topics_hierarchy.html', height=1050)
+        print_graph('data/graphs/Clustering/hierarchy/new_topics_hierarchy.html', height=750)
 
 
         st.subheader('Aggregated Topics')
+        # st.write(
+        #     'Finally, based on the previous charts and several AI algorithms combined, we have defined 12 final merged topics that we decided to keep. These are the topics that we believe best represent the reviews:\n'
+        #     '* Topic 1: **Delivery Deadlines** : challenges and strategies involved in managing delivery deadlines in logistics operations. \n'
+        #     '* Topic 2: **Quotation and Pricing Strategies**. \n'
+        #     '* Topic 3: **Touch Panels and Touch Screens** \n'
+        #     '* Topic 4: **Frequency Converters** : frequency converters used in industrial applications and the technical support provided by manufacturers and suppliers \n'
+        #     '* Topic 5: **Product Evaluation** : evaluate the quality, affordability and reliability of products and services. \n'
+        #     '* Topic 6: **Automation Components** : hardware and software components used in industrial automation systems. \n'
+        #     '* Topic 7: Reliability and Quality in **Customer Service and Support**. \n'
+        #     '* Topic 8: **Problem Solving and Communication** : focus on the importance of being efficient, quick and precise when solving problems \n'
+        #     '* Topic 9: **Assistance and Guidance**. \n'
+        #     '* Topic 10: **Power Supply Issues**. \n'
+        #     '* Topic 11: **Technical Support**. \n'
+        #     '* Topic 12: Some **Positive Feedbacks** \n'
+        #     )
+
         st.write(
             'Finally, based on the previous charts and several AI algorithms combined, we have defined 12 final merged topics that we decided to keep. These are the topics that we believe best represent the reviews:\n'
-            '* Topic 1: **Delivery Deadlines** : challenges and strategies involved in managing delivery deadlines in logistics operations. \n'
-            '* Topic 2: **Quotation and Pricing Strategies**. \n'
-            '* Topic 3: **Touch Panels and Touch Screens** \n'
-            '* Topic 4: **Frequency Converters** : frequency converters used in industrial applications and the technical support provided by manufacturers and suppliers \n'
-            '* Topic 5: **Product Evaluation** : evaluate the quality, affordability and reliability of products and services. \n'
-            '* Topic 6: **Automation Components** : hardware and software components used in industrial automation systems. \n'
-            '* Topic 7: Reliability and Quality in **Customer Service and Support**. \n'
-            '* Topic 8: **Problem Solving and Communication** : focus on the importance of being efficient, quick and precise when solving problems \n'
-            '* Topic 9: **Assistance and Guidance**. \n'
-            '* Topic 10: **Power Supply Issues**. \n'
-            '* Topic 11: **Technical Support**. \n'
-            '* Topic 12: Some **Positive Feedbacks** \n'
+            '* Topic 1: **Product Quality & Sales** \n'
+            '* Topic 2: **UPS & Touch Panels** : Technical Support and Maintenance for UPS Systems and Touch Panels \n'
+            '* Topic 3: **Quotations & Offers** : Quotations and Offers Management \n'
+            '* Topic 4: **Customer Service & Delivery** : Customer Service and Delivery Scheduling \n'
+            '* Topic 5: **Inverters & Drives Support**  \n'
+            '* Topic 6: **Tech Support & Problem Resolution** \n'
+            '* Topic 7: **Communication, Guidance & Feedback**. \n'
             )
 
     with tab2:
-        st.write("This section provides a detailed overview of the 12 topics we identified in the Topic Discovery section. You'll see in more detail what the topics correspond to and how they've evolved over time.\n\n")
+        st.write("This section provides a detailed overview of the 7 topics we identified in the Topic Discovery section. You'll see in more detail what the topics correspond to and how they've evolved over time.\n\n")
         st.subheader('''Vizualize documents per aggregated topic''')
         st.write("First, we have a 2D plot that visualizes the reviews in a 2D space per topic. Each point on this plot represents a review, and the distance between points indicates how similar the topics of the reviews are. Points that are close together are reviews that discuss similar topics.")
-        print_graph('data/graphs/Clustering/documents_viz/topic_merged_visualize_reduced_docs.html', height=750, width=1300)
+        print_graph('data/graphs/Clustering/documents_viz/new_topic_merged_visualize_reduced_docs.html', height=750, width=1300)
 
         st.subheader('''Wordcloud''')
         st.info("A wordcloud is a visual representation of text data where the size of each word indicates its importance. So, the larger the word in the wordcloud, the more strongly it defines the topic.")
@@ -66,7 +77,7 @@ def app():
         col1, col2 = st.columns(2)
         with col1:
             st.markdown(f"<h4 style='text-align: center; color: grey;'>topic_option Wordcloud</h4>", unsafe_allow_html=True)
-            st.image(f'data/wordclouds/topic_model_merged/{topic_option}.png')
+            st.image(f'data/wordclouds/new_topic_model_merged/{topic_option}.png')
         # with col2:
         #     st.markdown(f"<h4 style='text-align: center; color: grey;'>topic_option Wordcloud with lemmatized words</h4>", unsafe_allow_html=True)
         #     st.image(f'data/wordclouds/topic_model_merged/{topic_option}_lemmatized.png') 
@@ -74,7 +85,7 @@ def app():
         st.write("<br><br>", unsafe_allow_html=True)
         st.subheader('''Topic Evolution''')
         st.write("""Let's check the topics evolution in time (by months). This chart shows how the prevalence of each topic has changed over time. Each line represents a topic, and the height of the line at any point in time indicates how prevalent that topic was among the reviews at that time.\n\n""")
-        print_graph('data/graphs/Clustering/topic_in_time/topic_merged_time_by_months.html', height=500)
+        print_graph('data/graphs/Clustering/topic_in_time/new_topic_merged_time_by_months.html', height=500)
 
 
         st.subheader('''Heatmaps Graphics''')
@@ -88,10 +99,10 @@ def app():
         col1, col2 = st.columns(2)
         with col1:
             st.markdown("<h4 style='text-align: center; color: grey;'>The global topics relations</h4>", unsafe_allow_html=True)
-            print_graph('data/graphs/Clustering/heatmap/topic_merged_heatmap.html', height=750)
+            print_graph('data/graphs/Clustering/heatmap/new_topic_merged_heatmap.html', height=750)
         with col2:
             st.markdown("<h4 style='text-align: center; color: grey;'>The sub-topics relations</h4>", unsafe_allow_html=True)
-            print_graph('data/graphs/Clustering/heatmap/topic_heatmap.html', height=750)
+            print_graph('data/graphs/Clustering/heatmap/new_topic_heatmap.html', height=750)
 
     with tab3:
         st.subheader("Topic Repartition")
