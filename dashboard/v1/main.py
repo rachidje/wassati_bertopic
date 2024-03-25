@@ -78,7 +78,7 @@ authenticator = stauth.Authenticate(
 if'key' not in st.session_state:
     st.session_state['key'] = config['cookie']['key']
 
-name, authentication_status, username = authenticator.login('Login', 'main')
+name, authentication_status, username = authenticator.login()
 
 if authentication_status:
     authenticator.logout('Logout', 'main', key= 'unique_key')
