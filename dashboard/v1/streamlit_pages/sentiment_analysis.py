@@ -1,6 +1,5 @@
 import streamlit as st
-from utils.streamlit_utils import *
-import copy 
+from dashboard.v1.utils.streamlit_utils import *
 
 def app():
     st.header("Sentiment Analysis")

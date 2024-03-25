@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.9
 import streamlit as st
-import streamlit_authenticator as stauth
+# import streamlit_authenticator as stauth
 from yaml.loader import SafeLoader
 import yaml
 
 st.set_page_config(layout="wide")
 
-from streamlit_pages import descriptive_analysis, topic_analysis, sentiment_analysis, homepage, global_sentiment, sentiment_by_topic, specific_sentiment
+from dashboard.v1.streamlit_pages import descriptive_analysis, topic_analysis, sentiment_analysis, homepage, global_sentiment, sentiment_by_topic, specific_sentiment
 
 def main():
     SENTIMENT_PAGES = {
@@ -64,30 +64,31 @@ def main():
     st.markdown(footer, unsafe_allow_html=True)
 
 
-with open('credentials.yaml') as file:
-    config = yaml.load(file, Loader= SafeLoader)
+# with open('credentials.yaml') as file:
+#     config = yaml.load(file, Loader= SafeLoader)
 
-authenticator = stauth.Authenticate(
-    config['credentials'],
-    config['cookie']['name'],
-    config['cookie']['key'],
-    config['cookie']['expiry_days'],
-    config['preauthorized']
-)
+# authenticator = stauth.Authenticate(
+#     config['credentials'],
+#     config['cookie']['name'],
+#     config['cookie']['key'],
+#     config['cookie']['expiry_days'],
+#     config['preauthorized']
+# )
 
-if'key' not in st.session_state:
-    st.session_state['key'] = config['cookie']['key']
+# if'key' not in st.session_state:
+#     st.session_state['key'] = config['cookie']['key']
 
-name, authentication_status, username = authenticator.login()
+# name, authentication_status, username = authenticator.login()
 
-if authentication_status:
-    authenticator.logout('Logout', 'main', key= 'unique_key')
-    st.title(f"Welcome {name}")
-    main()
-elif authentication_status == False:
-    st.error('Username/Password is incorrect')
-elif authentication_status == None:
-    st.warning('Please enter your username and password')
+# if authentication_status:
+#     authenticator.logout('Logout', 'main', key= 'unique_key')
+#     st.title(f"Welcome {name}")
+#     main()
+# elif authentication_status == False:
+#     st.error('Username/Password is incorrect')
+# elif authentication_status == None:
+#     st.warning('Please enter your username and password')
 
+main()
 
 
