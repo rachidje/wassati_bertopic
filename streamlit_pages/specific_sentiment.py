@@ -15,7 +15,7 @@ def app():
     """)
 
     st.write("""
-    We’ve used advanced techniques to cluster the reviews into 12 distinct topics and performed sentiment analysis to identify sentiments and emotions. This page is divided into three main sections, each providing a unique perspective on the data.""")
+    We’ve used advanced techniques to cluster the reviews into 7 distinct topics and performed sentiment analysis to identify sentiments and emotions. This page is divided into three main sections, each providing a unique perspective on the data.""")
              
     st.header("""**3 - Emotion-specific Analysis**""")
 
@@ -49,9 +49,9 @@ def app():
     groupby_option = st.selectbox('With which class do you want to see the topic repartition of the emotion chosen?',groupby_options)
 
     st.subheader("Class-wise")    
-    print_graph(f'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/emotion_by_class/by_{groupby_option}/{emotion}_pct.html',height=750)
+    print_graph(f'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/emotion_by_class/by_{groupby_option}/new_{emotion}_pct.html',height=750)
     st.subheader("Topic-wise")    
-    print_graph(f'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/emotion_by_class/by_{groupby_option}/{emotion}_class_pct.html',height=750)
+    print_graph(f'data/graphs/Sentiment_Analysis/by_emotion/repartition_per_topic/emotion_by_class/by_{groupby_option}/new_{emotion}_class_pct.html',height=750)
     st.subheader("Repartition by levels")    
     emotion_sunburst = st.selectbox('Select one emotion',my_data["emotions"])
     col1, col2, col3 = st.columns([1,3,1])
