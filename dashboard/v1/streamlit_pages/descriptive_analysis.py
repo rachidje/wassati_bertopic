@@ -39,8 +39,8 @@ def app():
         # Score Distribution Global
         st.markdown("<h3 style='text-align: center;'><br>Global Score Distribution</h3>", unsafe_allow_html=True)
         _, col2, _ = st.columns([1,3,1])
-        # paths = ['data/graphs/Descriptive_Analysis/score_repartition/score_distribution.html',
-        #         'data/graphs/Descriptive_Analysis/score_repartition/recommend_score_distribution.html']
+        # paths = ['../data/graphs/Descriptive_Analysis/score_repartition/score_distribution.html',
+        #         '../data/graphs/Descriptive_Analysis/score_repartition/recommend_score_distribution.html']
         with col2:
             if st.session_state["score type"] == "Score":
                 fig = plot_barchart_distribution(data, "Overall Satisfaction", percentage_by="Topic", width=1000, height=500)
