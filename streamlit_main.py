@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.9
 import streamlit as st
 # import streamlit_authenticator as stauth
-from yaml.loader import SafeLoader
-import yaml
+# from yaml.loader import SafeLoader
+# import yaml
 
 st.set_page_config(layout="wide")
 
-from dashboard.v1.streamlit_pages import descriptive_analysis, topic_analysis, sentiment_analysis, homepage, global_sentiment, sentiment_by_topic, specific_sentiment
+from dashboard.v2.streamlit_pages import descriptive_analysis, topic_analysis, sentiment_analysis, homepage, global_sentiment, sentiment_by_topic, specific_sentiment
 
 def main():
     SENTIMENT_PAGES = {
