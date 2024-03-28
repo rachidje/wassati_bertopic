@@ -2,7 +2,7 @@ import streamlit as st
 
 st.set_page_config(layout="wide")
 
-from streamlit_pages import descriptive_analysis, topic_analysis, sentiment_analysis, homepage, global_sentiment, sentiment_by_topic, specific_sentiment
+from streamlit_pages import descriptive_analysis, topic_analysis, sentiment_analysis, homepage, global_sentiment, sentiment_by_topic, specific_sentiment, schwartz_analysis, specific_value_schwartz, schwartz_by_topic, global_value
 
 # Define your subpages and their corresponding functions
 SENTIMENT_PAGES = {
@@ -11,11 +11,18 @@ SENTIMENT_PAGES = {
     "--------- 3. specific sentiment": specific_sentiment
 }
 
+HUMANVALUES_PAGES = {
+    "--------- 1. global human values": global_value,
+    "--------- 2. values by topic": schwartz_by_topic,
+    "--------- 3. specific value": specific_value_schwartz
+}
+
 PAGES = {
     "Home": homepage,
     "Descriptive Analysis": descriptive_analysis,
     "Topic Analysis": topic_analysis,
-    "Sentiment Analysis": sentiment_analysis
+    "Sentiment Analysis": sentiment_analysis,
+    "Human Value Analysis": schwartz_analysis
 }
 
 st.sidebar.title('Menu')
@@ -28,6 +35,11 @@ if selection == "Sentiment Analysis":
     sentiment_selection = st.sidebar.radio("Sections from 'Sentiment Analysis'", list(SENTIMENT_PAGES.keys()))
     sentiment_page = SENTIMENT_PAGES[sentiment_selection]
     sentiment_page.app()
+elif selection == "Human Value Analysis":
+    # Display a new radio button for the subpages
+    value_selection = st.sidebar.radio("Sections from 'Human Value Analysis'", list(HUMANVALUES_PAGES.keys()))
+    value_page = HUMANVALUES_PAGES[value_selection]
+    value_page.app()
 else:
     page.app()
 
