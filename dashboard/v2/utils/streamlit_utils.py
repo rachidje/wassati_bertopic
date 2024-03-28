@@ -126,6 +126,7 @@ my_data = {option: (np.insert(data[option].unique().astype('object'), 0, "all_ti
 # Add the merged_topics and emotions lists to the my_data dictionary
 my_data['merged_topics'] = data['label'].dropna().unique()
 my_data['emotions'] = data['single_emotion_label'].dropna().unique()
+my_data['schwartz_values'] = data['schwartz_label'].dropna().unique()
 
 shorter_names={
     "single_emotion_label":"emotion",

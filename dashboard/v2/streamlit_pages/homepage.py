@@ -19,7 +19,7 @@ def app():
     nb_scores = data["Overall Satisfaction"].count()
     nb_recommend_scores = data["Likelihood to Recommend (SE)"].count()
     nb_comments = len(data_comments_only)
-    pct_comment_by_score = round(nb_comments/nb_scores*100,2)
+    pct_comment_by_score = round(nb_comments/62537*100,2)
 
     tab1, tab2 = st.tabs(["What's new ?", "Overview"])
 
