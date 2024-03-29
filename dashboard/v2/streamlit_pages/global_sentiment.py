@@ -31,8 +31,11 @@ def app():
         st.plotly_chart(fig)
 
     st.subheader('Sentiments and Emotions Repartition By Class')
-    groupby_option = st.selectbox('Select the group you want to study the sentiments/emotions on',groupby_options)
-    values = st.multiselect('Select the values you want to see the repartition',my_data[groupby_option])
+    groupby_option = st.selectbox('Select the group you want to study the sentiments/emotions on',groupby_options + ["Human Values"])
+    if groupby_option=="Human Values":
+        values = st.multiselect('Select the values you want to see the repartition',my_data["schwartz_values"])
+    else:
+        values = st.multiselect('Select the values you want to see the repartition',my_data[groupby_option])
 
     col1, col2 = st.columns([1,2.3])
     if values :
@@ -40,6 +43,8 @@ def app():
             time_period = st.selectbox('Select the period of time you want to study',my_data["year"])
             if time_period=="all_time":
                 time_period=None
+            if groupby_option=="Human Values":
+                groupby_option="schwartz_label"
             with col1:
                 fig = plot_barcharts_distribution(data, "sentiment_label", groupby_option, values_list=values, time_period=time_period, percentage_by="Topic", merge=True, width=450, height=750)
                 st.plotly_chart(fig)

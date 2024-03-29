@@ -33,8 +33,14 @@ def app():
             time_period = st.selectbox('Select the period of time you want to study',my_data["year"])
             if time_period=="all_time":
                 time_period=None
-            fig = plot_barcharts_distribution(data, "schwartz_label", groupby_option, values_list=values, time_period=time_period, percentage_by="Topic", merge=True, width=1100, height=750)
-            st.plotly_chart(fig)
+            if groupby_option=="emotions":
+                fig = plot_barcharts_distribution(data, "schwartz_label", "single_emotion_label", values_list=values, time_period=time_period, percentage_by="Topic", merge=True, width=1100, height=750)
+                st.plotly_chart(fig)
+                # fig = plot_barcharts_distribution(data, "single_emotion_label", "schwartz_label", values_list=my_data["schwartz_values"], time_period=time_period, percentage_by="Topic", merge=True, width=1100, height=750)
+                # st.plotly_chart(fig)
+            else:
+                fig = plot_barcharts_distribution(data, "schwartz_label", groupby_option, values_list=values, time_period=time_period, percentage_by="Topic", merge=True, width=1100, height=750)
+                st.plotly_chart(fig)
         else:
             fig = plot_barcharts_distribution(data, "schwartz_label", groupby_option, values_list=values, time_period=None, percentage_by="Topic", merge=True, width=1100, height=750)
             st.plotly_chart(fig)
