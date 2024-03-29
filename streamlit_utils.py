@@ -137,7 +137,7 @@ shorter_names={
     "Clusters":"cluster",
     "year":"year"
 }
-
+ 
 levels = ['Zone','Clusters','Account Country'] # it has to be from the highest level to the lowest
 color_sequence = ['#636EFA','#EF553B','#00CC96','#AB63FA','#FFA15A','#19D3F3','#FF6692','#B6E880','#FF97FF','#FECB52','#E763FA','#BA68C8','#FFA000','#F06292','#7986CB','#4DB6AC','#FF8A65','#A1887F','#90A4AE','#E53935','#8E24AA']
 
