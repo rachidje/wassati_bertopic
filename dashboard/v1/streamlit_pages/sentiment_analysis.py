@@ -15,7 +15,7 @@ def app():
     """)
 
     st.write("""
-    We’ve used advanced techniques to cluster the reviews into 12 distinct topics and performed sentiment analysis to identify sentiments and emotions. This page is divided into three main sections, each providing a unique perspective on the data.
+    We’ve used advanced techniques to cluster the reviews into 7 distinct topics and performed sentiment analysis to identify sentiments and emotions. This page is divided into three main sections, each providing a unique perspective on the data.
 
     **1 - Global Sentiment Analysis**:
 
@@ -23,7 +23,7 @@ def app():
 
     **2 - Topic-wise Sentiment Analysis**:
 
-    The “Topic-wise Sentiment Analysis” section delves deeper into the sentiment and emotion distribution across the 12 identified topics. Here, you’ll find charts depicting the sentiment and emotion distribution for each topic. Additionally, we provide topic-wise and class-wise percentage charts to give you a more granular understanding of the sentiment distribution within each topic and category.
+    The “Topic-wise Sentiment Analysis” section delves deeper into the sentiment and emotion distribution across the 7 identified topics. Here, you’ll find charts depicting the sentiment and emotion distribution for each topic. Additionally, we provide topic-wise and class-wise percentage charts to give you a more granular understanding of the sentiment distribution within each topic and category.
 
     **3 - Emotion-specific Analysis**:
 

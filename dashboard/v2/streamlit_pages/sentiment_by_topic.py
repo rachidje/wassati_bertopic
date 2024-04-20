@@ -19,7 +19,7 @@ def app():
 
     st.header("""**2 - Sentiment/Emotion and Topic**""")
 
-    st.write("""This section delves deeper into the sentiment and emotion distribution across the 12 identified topics. Here, you’ll find charts depicting the sentiment and emotion distribution for each topic. Additionally, we provide topic-wise and class-wise percentage charts to give you a more granular understanding of the sentiment distribution within each topic and category.""")
+    st.write("""This section delves deeper into the sentiment and emotion distribution across the 7 identified topics. Here, you’ll find charts depicting the sentiment and emotion distribution for each topic. Additionally, we provide topic-wise and class-wise percentage charts to give you a more granular understanding of the sentiment distribution within each topic and category.""")
 
     st.subheader('**2.1** - Sentiments and Emotions Repartition By Topic')
     st.write("""Let's study the repartition by topic of the sentiments and emotions.\n\n""")

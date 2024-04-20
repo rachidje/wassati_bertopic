@@ -15,7 +15,7 @@ def app():
     """)
 
     st.write("""
-    We’ve used advanced techniques to cluster the reviews into 12 distinct topics and performed sentiment analysis to identify sentiments and emotions. This page is divided into three main sections, each providing a unique perspective on the data.""")
+    We’ve used advanced techniques to cluster the reviews into 7 distinct topics and performed sentiment analysis to identify sentiments and emotions. This page is divided into three main sections, each providing a unique perspective on the data.""")
 
     st.header("""**1 - Global Sentiment Analysis**""")
 
@@ -59,4 +59,4 @@ def app():
                 fig = plot_barcharts_distribution(data, "single_emotion_label", groupby_option, values_list=values, time_period=None, percentage_by="Topic", merge=True, width=1100, height=750)
                 st.plotly_chart(fig)
     else :
-        st.warning("Please select at least one value to see the sentiment and emotion distribution chart.")  
+        st.warning("Please select at least one value to see the sentiment and emotion distribution chart.")   

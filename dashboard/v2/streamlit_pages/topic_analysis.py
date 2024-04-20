@@ -52,7 +52,7 @@ def app():
         #     )
 
         st.write(
-            'Finally, based on the previous charts and several AI algorithms combined, we have defined 12 final merged topics that we decided to keep. These are the topics that we believe best represent the reviews:\n'
+            'Finally, based on the previous charts and several AI algorithms combined, we have defined 7 final merged topics that we decided to keep. These are the topics that we believe best represent the reviews:\n'
             '* Topic 1: **Product Quality & Sales** \n'
             '* Topic 2: **UPS & Touch Panels** : Technical Support and Maintenance for UPS Systems and Touch Panels \n'
             '* Topic 3: **Quotations & Offers** : Quotations and Offers Management \n'

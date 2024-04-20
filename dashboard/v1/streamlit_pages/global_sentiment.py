@@ -15,7 +15,7 @@ def app():
     """)
 
     st.write("""
-    We’ve used advanced techniques to cluster the reviews into 12 distinct topics and performed sentiment analysis to identify sentiments and emotions. This page is divided into three main sections, each providing a unique perspective on the data.""")
+    We’ve used advanced techniques to cluster the reviews into 7 distinct topics and performed sentiment analysis to identify sentiments and emotions. This page is divided into three main sections, each providing a unique perspective on the data.""")
 
     st.header("""**1 - Global Sentiment Analysis**""")
 

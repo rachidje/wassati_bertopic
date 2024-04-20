@@ -25,7 +25,7 @@ def app():
     st.plotly_chart(fig)
 
     st.subheader('Human Value Repartition By Class')
-    groupby_option = st.selectbox('Select the group you want to study the human values on',groupby_options)
+    groupby_option = st.selectbox('Select the group you want to study the human values on',groupby_options + ['emotions'])
     values = st.multiselect('Select the values you want to see the repartition',my_data[groupby_option])
 
     if values :
