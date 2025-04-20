@@ -2,5 +2,10 @@ data/
 models/
 notebooks_rachid/
 notebooks_martin/
+<<<<<<< HEAD
 credentials.yaml
 __pycache__/
+=======
+dashboard/credentials.yaml
+credentials.yaml
+>>>>>>> rachid

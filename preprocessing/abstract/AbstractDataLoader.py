@@ -11,5 +11,4 @@ class AbstractLoader(ABC):
 
     @abstractmethod
     def process(self) -> DataFrame:
-        pass
-
+        ...

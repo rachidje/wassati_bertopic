@@ -4,6 +4,7 @@ from nltk.corpus import wordnet
 import nltk
 
 class WordcloudMaker:
+    def get_word_freq(self, topic, top_n= 10, scale= 1, lemmatize= False) -> dict: ...
 
     def lemmatize_words(self, topic_words):
         """
@@ -61,8 +62,6 @@ class WordcloudMaker:
                 lemma_prob[lemma] = prob
         
         return lemma_prob
-    
-    def get_word_freq(self, topic, top_n= 10, scale= 1, lemmatize= False) -> dict: ...
     
     def create_wordcloud(self, topic, top_n=10, scale=1, lemmatize=False, stopwords=None, wordcloud_kwargs=None):
         """

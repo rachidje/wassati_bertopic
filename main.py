@@ -6,6 +6,8 @@ from preprocessing.preprocessing import Preprocessor
 from vocabulary.vocabulary import VocabularyCreator
 from clustering.clustering import ClusteringMethod
 from sklearn.feature_extraction.text import CountVectorizer
+
+from visualization.Shared.Sunburst.sunburst_chart import SunburstChart
 import nltk
 
 nltk.download('stopwords')
@@ -14,7 +16,7 @@ stopwords.extend(more_stopwords)
 
 model_name = "all-MiniLM-L6-v2"
 
-df = read_csv("data/schneider.csv")
+df = read_csv("dashboard/data/csv_files/schneider.csv")
 schneiderDataLoader = SchneiderDataLoader(df, countries_to_update)
 preprocessing = Preprocessor(
     schneiderDataLoader, 
@@ -23,7 +25,8 @@ preprocessing = Preprocessor(
     replacements
 )
 
-df_preprocessed = preprocessing.preprocess()
+df_full = preprocessing.preprocess()
+df_preprocessed = df_full[df_full['non_empty_rows'] == True]
 
 vocabulary_creator = VocabularyCreator(
     model_name,
@@ -49,3 +52,19 @@ topics, probs, topic_model, embeddings = clustering.run_bertopic(
     )
 
 # clustering.save('models/model')
+
+df = read_csv("dashboard/data/csv_files/df_all_labelled.csv")
+# Find the additional columns in df
+additional_columns = ['allComment', 'keywords', 'label', 'predicted_labels', 'predicted_scores', 'proba_dict', 'score', 'sentiment_label', 'single_emotion_label', 'single_sentiment_from_emotion', 'topic', 'year_month']
+# Perform the merge only on these additional columns
+merged_df = df_full.merge(df[['Survey ID'] + additional_columns], on='Survey ID', how='left')
+# merged_df.to_csv("dashboard/data/csv_files/schneider_processed_labelled_full.csv", index=False)
+
+
+### Sunburst Chart
+levels = ['Zone','Clusters','Account Country'] # it has to be from the highest level to the lowest
+color_sequence = ['#636EFA','#EF553B','#00CC96','#AB63FA','#FFA15A','#19D3F3','#FF6692','#B6E880','#FF97FF','#FECB52','#E763FA','#BA68C8','#FFA000','#F06292','#7986CB','#4DB6AC','#FF8A65','#A1887F','#90A4AE','#E53935','#8E24AA']
+
+
+sc = SunburstChart(df = read_csv('data/csv_files/df_all_labelled.csv'), levels= levels)
+sc.sunburst(color_sequence= color_sequence, unique_parent= False, class_column= "single_emotion_label", class_value= "disappointment")
